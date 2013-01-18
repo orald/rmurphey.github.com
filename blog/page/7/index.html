@@ -1,0 +1,772 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Adventures in JavaScript Development</title>
+  <meta name="author" content="Rebecca Murphey">
+
+  
+  <meta name="description" content="Occasionally the folks at 37signals write a blog post that seems to channel thoughts that I&#8217;ve just never put to paper [blog]. This week they &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://rmurphey.github.com/blog/page/7/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Adventures in JavaScript Development" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-143877-10']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Adventures in JavaScript Development</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:rmurphey.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/06/06/skipping-photoshop-for-web-design/">Skipping Photoshop for Web Design</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-06-06T00:00:00-04:00" pubdate data-updated="true">Jun 6<span>th</span>, 2008</time>
+        
+         | <a href="/blog/2008/06/06/skipping-photoshop-for-web-design/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Occasionally the folks at 37signals write a blog post that seems to channel thoughts that I&#8217;ve just never put to paper [blog]. This week they did it twice, with <a href="http://www.37signals.com/svn/posts/1061-why-we-skip-photoshop">two</a> <a href="http://www.37signals.com/svn/posts/1066-web-designers-should-do-their-own-htmlcss">posts</a> about how they prefer to skip Photoshop and work with HTML and CSS when it comes to designing a web site.</p>
+
+<p>I&#8217;ve found it incredibly pleasant to work with designers who have demonstrated knowledge and skill when it comes to CSS and HTML &#8211; at my last job, our lead designer was also the guy you went to if you were stumped by a CSS issue. Knowing the tools means that production considerations become an active part of the design process: you don&#8217;t create an element without giving some thought to how it will be built. In the best of worlds, you weigh the cost of building the element &#8211; in time, in HTTP requests, in excessive markup &#8211; against the benefit of having it on the site, and make educated decisions about what is &#8220;worth it.&#8221;</p>
+
+<p>I&#8217;ve never found Photoshop to be an adequate tool for mocking up a design &#8211; it just doesn&#8217;t &#8220;think&#8221; the way the web does, it just doesn&#8217;t observe the constraints that the web imposes, and it just doesn&#8217;t make accessible the parts of CSS that are truly powerful.</p>
+
+<p>While I am no designer, I play one sometimes for freelance clients. When I haven&#8217;t wanted to go straight to code, I&#8217;ve found that another Adobe product, InDesign, can be incredibly powerful. It&#8217;s an application intended for print layout (and some of its related assumptions can be a little frustrating, such as its lack of a hex-based color picker/setter), but generally it is exponentially closer to the realities of the web than Photoshop. It thinks in boxes, not pixels, and offers paragraph-, character- and object-level stylesheets that can &#8230; cascade! Just like with CSS, you can rapidly and dramatically alter the appearance of a page once you establish the base, semantic elements of it. It steers you to think about a page&#8217;s structure, not just its presentation.</p>
+
+<p>I&#8217;m hoping that the number of web designers who think that Photoshop is a sufficient tool will dwindle, but I&#8217;m not sure what the route is to get to that point. Photoshop&#8217;s inadequacy in this regard is so clear to me &#8211; and to people like the 37signals folks &#8211; that I&#8217;m not sure how you persuade someone who still believes otherwise.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/05/19/another-cautionary-remote-javascript-tale/">Another Cautionary Remote Javascript Tale</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-05-19T00:00:00-04:00" pubdate data-updated="true">May 19<span>th</span>, 2008</time>
+        
+         | <a href="/blog/2008/05/19/another-cautionary-remote-javascript-tale/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It sounds like TechCrunch got <a href="http://www.techcrunch.com/2008/05/17/dont-screw-your-partners-over-a-marketing-promotion/">burnt</a> yesterday by some remote Javascript appearing too high in their pages&#8217; HTML. Visitors&#8217; browsers were waiting and waiting for the remote script to load, and refusing to render the rest of the page until it did.</p>
+
+<blockquote class="posterous_medium_quote">All we knew is that our sites all simultaneously went down three times yesterday. After the first time we identified the likely problem as Seesmic and contacted the company. They assured us there was no way the plugin could take the site down. When it happened a second time we disabled the Seesmic plugin and the sites went back up. We identified the problem - the plugin was loading an external Javascript file, and when Seesmic’s servers were down, we just sat and waited for it for up to two minutes before timing out.</blockquote>
+
+
+<p>The remedy to this, of course, is to load remote scripts in the foot of the page, after all of the actual content has loaded. However, plenty of remote Javascript &#8220;widgets&#8221; aim at the least common denominator without offering a viable option for skilled users who don&#8217;t actually want their site to break. The widget publishers simply require sites to put a remote script call exactly where the site wants the widget to appear. If the widget server chokes, the site is out of luck.</p>
+
+<p>I wrote about a related problem with ad-related Javascript, and my attempts to get around its desire to appear wherever the ad appears, making page rendering grind to a halt if the ad network was slow. We ended up getting around that problem with a bit of utter absurdity: using an iframe that called some server-side code that would generate an HTML page that contained little more than a script tag.</p>
+
+<p>Our solution, as it were, meant an extra HTTP request to our server for every ad on the page, just to avoid a problem that wouldn&#8217;t exist in the first place if the authors of these widgets and ads would offer some real options to their savvier users. A simple method like</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">widget</span><span class="p">.</span><span class="nx">appendToElement</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>seems like it would do the trick &#8211; something that could be called at the end of a page and fail fairly silently by just leaving the destination element empty. I imagine that the use of such a method is hardly out of the reach of the good folks at TechCrunch, or plenty of other sites. Until an approach like this becomes a bit more common, expect many more rants like the one we saw from TechCrunch.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/04/11/remote-javascript-with-document-write-is-killing-me/">Remote Javascript With document.write() Is Killing Me</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-04-11T00:00:00-04:00" pubdate data-updated="true">Apr 11<span>th</span>, 2008</time>
+        
+         | <a href="/blog/2008/04/11/remote-javascript-with-document-write-is-killing-me/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I have been coming across way too much remote Javascript that uses document.write() to insert its contents. From ad providers to video hosting services, it&#8217;s common practice to provide a Javascript tag that includes <code>document.write</code> and tell the site owner to just include it in their page where the ad or content should appear.</p>
+
+<p>This is a great least-common-denominator approach for folks who don&#8217;t want to be bothered with understanding how this stuff works. The problem is that when an ad or a video or any other content loaded via remote Javascript needs to appear near the top of the HTML document, before the content, the site user doesn&#8217;t see any more content while the browser fetches the file. In the case of one service we tried, the initial script tag actually wrote <em>five more</em> remote script tags, each of which requires a separate HTTP request, amounting to a total delay of more than a second before the content appeared. In the meantime, the user was staring at a near-empty page.</p>
+
+<p>There are <a href="http://wonko.com/post/remote_javascript_includes_without_the_performance_penalty_part">various</a> <a href="http://blog.rebeccamurphey.com/2008/04/06/fix-for-slow-loading-google-ads/">hacks</a> for getting around this, which involve loading the content low on the page and using (yet more) Javascript to move it to the appropriate place once the page has loaded, but they are hacky and not necessarily foolproof when it comes to ads. My initial experiments with doing this with some ad providers led to multiple ads appearing on the page, or to the whole page being replaced with just an ad.</p>
+
+<p>If these services want people to stop complaining that their sites are loading slowly as a result of adding these tags (and perhaps looking at least for solutions that minimize the number of scripts that need to be loaded), it&#8217;s time that they expose an API that will allow sites to include their <code>script</code> tag at the end of the page&#8217;s HTML, <a href="http://developer.yahoo.com/performance/rules.html#js_bottom">where it belongs</a>. Then sites could call a method to insert the ad wherever it&#8217;s needed, <em>once the content has finished loading</em>.</p>
+
+<p>For example:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">ad</span><span class="p">.</span><span class="nx">appendTo</span><span class="p">(</span><span class="s1">&#39;#my_ad_container&#39;</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I grant that this would require a bit more code from the ad providers (and that their ads would load a little bit later than they do now), but the improvement in user experience would be tremendous, relative to waiting as much as a second or two for the ad — and thus the rest of the page — to load.</p>
+
+<p>&#8211;</p>
+
+<p>Update: If you&#8217;re looking for a fix to this problem, also check out <a href="http://ejohn.org/blog/xhtml-documentwrite-and-adsense/">John Resig&#8217;s document.write() rewrite</a>.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/04/07/fix-for-slow-loading-google-ads/">Fix for Slow-loading Google Ads</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-04-07T00:00:00-04:00" pubdate data-updated="true">Apr 7<span>th</span>, 2008</time>
+        
+         | <a href="/blog/2008/04/07/fix-for-slow-loading-google-ads/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Google&#8217;s AdSense ads, and lots of others, are added to pages using Javascript, and if that Javascript appears early in the page&#8217;s HTML, it can seriously slow down the rendering of the rest of the page. That&#8217;s because browsers generally refuse to do any further rendering of the page until they have a requested Javascript file in hand.</p>
+
+<p>We ran into this with the ad in the left column of some pages on <a href="http://dailystrength.org">DailyStrength.org</a>, which appears above the page content in the HTML; when we switched to a new ad provider, which required fetching multiple Javascript files, the issue was even more pronounced.</p>
+
+<p>Since these ads only work when Javascript is enabled anyway, I decided to use some DOM manipulation (via jQuery, which is already on the page) to load the ad script in a hidden div at the bottom of the HTML, and then relocate the Javascript-generated iframe containing the ad to an empty, visible div where the ad needed to be:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#ad_hide&#39;</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;iframe&#39;</span><span class="p">).</span><span class="nx">appendTo</span><span class="p">(</span><span class="s1">&#39;#ad&#39;</span><span class="p">);</span><span class="o">&lt;</span><span class="err">/pre&gt;&lt;/div&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now, loading the Javascript doesn&#8217;t slow down the rendering of the content, and the ad appears right after the page is loaded.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/03/14/bye-bye-yui-bloat/">Bye Bye YUI Bloat</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-03-14T00:00:00-04:00" pubdate data-updated="true">Mar 14<span>th</span>, 2008</time>
+        
+         | <a href="/blog/2008/03/14/bye-bye-yui-bloat/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&#8217;ve been doing some serious work this week cutting down on YUI bloat &#8211; our site was including the entire YUI library at the top of every page, at a cost of more than 200k. Worse, because the library was included at the top of every page, the rest of the page had to wait for it to load before it would render.</p>
+
+<p>First, I switched all of our AJAX to use jQuery, the library we&#8217;ve standardized on going forward &#8211; the fact that we had a wrapper function for all of our AJAX calls made this pleasantly easy. Then, I went through the code and figured out which YUI components were being used where. Once that was done, I was able to roll up a few core YUI files into a file to be included in the global header, and call other components only as needed. Total savings: 170k. Holy crap.</p>
+
+<p>I&#8217;d still like to see us do away with YUI all together &#8211; <a href="http://ajaxian.com/archives/ojay-a-chaining-wrapper-for-the-yui">Ajaxian wrote about Ojay the other day</a>, and all I could think was &#8220;OMG, you want me to use <em>another</em> library to make this library easier to use? I&#8217;ll stick with jQuery, thanks&#8221; &#8211; but considering how much javascript we&#8217;d have to rewrite, I&#8217;m at least feeling much better about 38k than 208k.</p>
+
+<p>By the way, <a href="http://marcus.net/blog">Marcus</a> sent me a link to a great article about why this stuff matters: <a href="http://searchsoftwarequality.techtarget.com/tip/0,289483,sid92_gci1301766,00.html">Use &#8220;SCORN&#8221; to test the front end of a website for performance</a> by Scott Barber. It&#8217;s made me get serious about cutting down on our number of HTTP requests, and so far, it seems to be making a difference.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/02/22/back-on-the-air/">Back on the Air</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-02-22T00:00:00-05:00" pubdate data-updated="true">Feb 22<span>nd</span>, 2008</time>
+        
+         | <a href="/blog/2008/02/22/back-on-the-air/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&#8217;ve been juggling 1.5 jobs for the last few weeks, but starting Monday it&#8217;s back down to one, but a new one: I&#8217;ll be doing front-end development for <a href="http://www.dailystrength.org">DailyStrength.org</a>, which will hopefully give me plenty of front-end goodness to write about again. For all two of you paying attention to this site, sorry for the blackout.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/02/05/selectors-in-jquery/">Selectors in jQuery</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-02-05T00:00:00-05:00" pubdate data-updated="true">Feb 5<span>th</span>, 2008</time>
+        
+         | <a href="/blog/2008/02/05/selectors-in-jquery/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Just a note to self: <a href="http://www.learningjquery.com/2006/12/quick-tip-optimizing-dom-traversal">Quick Tip - Optimizing DOM Traversal</a>. Avoid bare classname selectors like <code>$('.foo')</code> when possible; qualify them with an element type or, ideally, the ID of a parent element: <code>$('div.foo')</code> or <code>$('#bar .foo')</code>.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/01/29/cache-regexes-in-javascript/">Cache Regexes in Javascript</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-01-29T00:00:00-05:00" pubdate data-updated="true">Jan 29<span>th</span>, 2008</time>
+        
+         | <a href="/blog/2008/01/29/cache-regexes-in-javascript/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This post about <a href="http://blogs.sun.com/greimer/entry/pre_compile_and_cache_yer">precompiling and caching regular expressions</a> came across my Google reader just as I was wrangling with a slow regex issue. Not sure my issue will benefit from this, but neat regardless.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/01/18/i-have-discovered-a-use-for-dreamweaver-s-design-view-no-really/">I Have Discovered a Use for Dreamweaver&#8217;s Design View (No Really)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-01-18T00:00:00-05:00" pubdate data-updated="true">Jan 18<span>th</span>, 2008</time>
+        
+         | <a href="/blog/2008/01/18/i-have-discovered-a-use-for-dreamweaver-s-design-view-no-really/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I just got a request to edit a static page that showed several of a company&#8217;s employees. Turns out that a bunch of them aren&#8217;t employees anymore, and the client wanted the page to be updated. I knew before I even opened it that the content was going to be in tables (nested nested tables, in fact), and that rearranging it would be a giant pain.</p>
+
+<p>Dreamweaver design view to the rescue. This thing was <em>made</em> for tables, and in no time I was able to delete what needed to be deleted and rearrange the remaining employees without leaving empty table cells. I didn&#8217;t need to navigate nasty table HTML, and I didn&#8217;t have to worry about accidentally deleting a crucial <code>td</code> that would bring the page to its knees. A quick preview in the browser verified that no harm had been done in my brief foray into design view, and the job was done.</p>
+
+<p>Let it be said: Design view is evil and awful; it seeks to make front-end development accessible to people who have no business going anywhere near front-end development. But it&#8217;s a good tool to have in the toolbox when you&#8217;re faced with editing a table-based page, even if you just use it to find your bearings in the mess of tags.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/01/13/fix-uneven-line-lengths-in-headlines/">Fix Uneven Line Lengths in Headlines</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-01-13T00:00:00-05:00" pubdate data-updated="true">Jan 13<span>th</span>, 2008</time>
+        
+         | <a href="/blog/2008/01/13/fix-uneven-line-lengths-in-headlines/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I used to work in newspapers, and we were diligent about fixing &#8220;bad breaks&#8221; in headlines. Nothing looks worse than a headline that&#8217;s far longer on one line than on another. Desktop publishing software has some intelligence about these bad breaks, but the web, not so much. A little jQuery can clean up the bad breaks, though &#8211; for example, this will clean up all the <code>h2</code>s.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;h2&#39;</span><span class="p">).</span><span class="nx">each</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">$h2</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// get the height of the existing element</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">height</span> <span class="o">=</span> <span class="nx">$h2</span><span class="p">.</span><span class="nx">height</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// get the text of the existing element</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">text</span> <span class="o">=</span> <span class="nx">$h2</span><span class="p">.</span><span class="nx">text</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// put temporary text in the element</span>
+</span><span class='line'>  <span class="c1">// that will make the element one line tall</span>
+</span><span class='line'>  <span class="nx">$h2</span><span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="s1">&#39;temp&#39;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// get the height of the one-line element</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">singleLineHeight</span> <span class="o">=</span> <span class="nx">$h2</span><span class="p">.</span><span class="nx">height</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// check to see if the initial element was</span>
+</span><span class='line'>  <span class="c1">// taller than the one-line element;</span>
+</span><span class='line'>  <span class="c1">// if so, look for the midpoint of the</span>
+</span><span class='line'>  <span class="c1">// initial text and split it there</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="nx">height</span> <span class="o">&amp;</span><span class="nx">gt</span><span class="p">;</span> <span class="nx">singleLineHeight</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">length</span> <span class="o">=</span> <span class="nx">text</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">mid</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">length</span><span class="o">/</span><span class="mi">2</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">for</span> <span class="p">(</span><span class="nx">i</span><span class="o">=</span><span class="nx">mid</span><span class="p">;</span> <span class="nx">i</span><span class="o">&amp;</span><span class="nx">gt</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="nx">text</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39; &#39;</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="kd">var</span> <span class="nx">breakIndex</span> <span class="o">=</span> <span class="nx">i</span><span class="p">;</span>
+</span><span class='line'>        <span class="k">break</span><span class="p">;</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">newText</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">for</span> <span class="p">(</span><span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="err">&#39;</span><span class="p">;</span>
+</span><span class='line'>      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">newText</span> <span class="o">=</span> <span class="nx">newText</span> <span class="o">+</span> <span class="nx">text</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="nx">$h2</span><span class="p">.</span><span class="nx">html</span><span class="p">(</span><span class="nx">newText</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// otherwise, put the initial text</span>
+</span><span class='line'>    <span class="c1">// back in the element and move on</span>
+</span><span class='line'>    <span class="nx">$h2</span><span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="nx">text</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So you end up changing this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>This is a very long headline that goes on and then breaks
+</span><span class='line'>badly</span></code></pre></td></tr></table></div></figure>
+
+
+<p>to something like this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>This is a very long headline that
+</span><span class='line'>goes on and then breaks badly</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You&#8217;ll want to change the <code>$('h2')</code> selector to exactly what you need; in the case of this blog, <code>$('div.post h2 a')</code> is actually more appropriate. You&#8217;re going to be best off if matching elements contain only text, and no HTML.</p>
+
+<p>Also, this will only work for elements that are one or two lines long; for headlines of arbitrary length, you&#8217;d need to see exactly how the height of the initial element compared to the height of the temporary one-line element, and then split the headline multiple times. Then again, thinking back to my newspaper days where we had to convey a whole story in four words, you might ask yourself whether you actually need a headline that&#8217;s more than two lines long.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/8/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/6/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/01/18/onward/">Onward</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/12/10/js-conditionals/">Two Things about Conditionals in JavaScript</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/12/09/this-is-the-cigarette/">This is the Cigarette</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/29/choosing-presentation-color-scheme/">On Choosing a Syntax Highlighting Scheme for Your Next Presentation</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/25/times-open-science-fair/">Show & Tell</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/rmurphey">@rmurphey</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'rmurphey',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("rmurphey", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/rmurphey" class="twitter-follow-button" data-show-count="false">Follow @rmurphey</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Rebecca Murphey -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'rmurphey';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

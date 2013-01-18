@@ -1,0 +1,842 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Adventures in JavaScript Development</title>
+  <meta name="author" content="Rebecca Murphey">
+
+  
+  <meta name="description" content="Microsoft has released yet another version (the third, I think) of their timebombed XP/IE6 image for use with their Virtual PC Console. (Why they &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://rmurphey.github.com/blog/page/9/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Adventures in JavaScript Development" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-143877-10']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Adventures in JavaScript Development</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:rmurphey.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/12/11/in-case-you-thought-ie6-was-going-away/">In Case You Thought IE6 Was Going Away</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-12-11T00:00:00-05:00" pubdate data-updated="true">Dec 11<span>th</span>, 2007</time>
+        
+         | <a href="/blog/2007/12/11/in-case-you-thought-ie6-was-going-away/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Microsoft has released <a href="http://www.microsoft.com/downloads/details.aspx?FamilyId=21EABB90-958F-4B64-B5F1-73D0A413C8EF&amp;displaylang=en">yet another version</a> (the third, I think) of their timebombed XP/IE6 image for use with their <a href="http://www.microsoft.com/windows/products/winfamily/virtualpc/default.mspx">Virtual PC Console</a>. (Why they keep timebombing it is a mystery to me &#8211; it&#8217;s as if they think one of these days, approximately six months from whenever they release a new version, there won&#8217;t be a need for IE6 testing anymore.)</p>
+
+<p>I have not a single kind word for IE6, and about the best I can say about IE7 is that a) it sucks less than IE6 and b) some proprietary software I have to use for client work crashes a bit less often in it than in Firefox. That said, both IE6 and IE7 are a fact of life, and it&#8217;s also a fact of life that Microsoft saw fit to ensure that you can&#8217;t easily run both side-by side &#8211; which is why you have this whole Virtual PC setup. <em>If</em> you can get the Virtual Machine Additions, Shared Networking, and Shared Folders all to work (at the same time, if you&#8217;re lucky!), then this is a decent kludge to let you test your sites in IE6.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/12/10/insert-jquery-into-any-page-using-a-bookmarklet/">Insert jQuery Into Any Page Using a Bookmarklet</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-12-10T00:00:00-05:00" pubdate data-updated="true">Dec 10<span>th</span>, 2007</time>
+        
+         | <a href="/blog/2007/12/10/insert-jquery-into-any-page-using-a-bookmarklet/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Ever wish you could use jQuery on a page at the drop of a hat, without having access to the page itself? Well I&#8217;ll be damned, <a href="http://simonwillison.net/2007/Aug/15/jquery/">you can</a>.</p>
+
+<p>(This is one of those things that in hindsight seems so painfully obvious that I&#8217;m almost embarrassed to admit that it never occurred to me, but admit it I will.)</p>
+
+<p>For those working with jQuery 1.2.1, here is an <a>updated Insert jQuery 1.2.1 bookmarket</a>, and here is the code for the bookmarklet in its entirety:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">javascript</span><span class="o">:</span><span class="k">void</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span><span class="kd">var</span> <span class="nx">s</span><span class="o">=</span><span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">&#39;script&#39;</span><span class="p">);</span> <span class="nx">s</span><span class="p">.</span><span class="nx">src</span><span class="o">=</span><span class="s1">&#39;http://code.jquery.com/jquery-1.2.1.js&#39;</span><span class="p">;</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementsByTagName</span><span class="p">(</span><span class="s1">&#39;head&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">].</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">s</span><span class="p">);}())</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I came across this in a recent post at <a href="http://morethanseven.net/posts/debug-web-pages-with-jquery-and-jash">Morethanseven</a>, but the Simon Willison post is from August, so this is probably a bit of old news. I&#8217;m still excited though.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/12/09/using-ems-for-font-sizing-in-css/">Using Ems for Font Sizing in Css</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-12-09T00:00:00-05:00" pubdate data-updated="true">Dec 9<span>th</span>, 2007</time>
+        
+         | <a href="/blog/2007/12/09/using-ems-for-font-sizing-in-css/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>A List Apart had a great article recently on <a href="http://www.alistapart.com/articles/howtosizetextincss/">using &#8216;em&#8217; for CSS font-size declarations</a>, which served as great back-up for some conversations I&#8217;d been having among coworkers. (It turns out that people who didn&#8217;t have a former life in print don&#8217;t necessarily understand what an em is: a self-referential unit of font size measurement, equal to the height of the capital letter M. Back in the typesetting days, it was a unit for measuring space, especially horizontal space, in the form of an &#8220;em dash&#8221; (rendered now as <code>&amp;mdash;</code>) or an &#8220;em space.&#8221; There was also a sister unit, the &#8220;en.&#8221;)</p>
+
+<p>Anyway: I just came across <a href="http://benjaminsterling.com/using-em-for-font-size-learning-on-the-go/">this post</a>, by someone trying to put ems into practice; at the end, he gets into tools for doing conversions from pixels to ems, and it struck a surprising nerve with me.</p>
+
+<p>Here&#8217;s the thing: While I can see how pixel conversion seems useful when you first make the switch from px to em, I think the whole point of using ems instead of pixels is to embrace the concept that, on the web, sizes are relative, not absolute. If you&#8217;re focused on matching an absolute size in a mockup by converting pixels to ems, the chances seem good that you&#8217;re dealing with a layout that wasn&#8217;t intended to work with relatively sized text to begin with, and/or that your ultimate product won&#8217;t work if the user makes a different decision than you about how they will consume it.</p>
+
+<p>If you receive a Photoshop mockup where body copy is 10px tall, I think it&#8217;s a tremendous waste of time to measure that 10px and convert it to ems &#8211; 10px on my 1024x768 monitor is a far cry from 10px on my 1600x1200 monitor, nevermind on the HDTV sitting across the room.</p>
+
+<p>When you&#8217;re designing and styling text for the web, better to:</p>
+
+<ul>
+<li>Assume from the start that users will consume your site differently than you do.</li>
+<li>Make decisions in your design, CSS and HTML that will consistently convey the content and hierarchy of your site, regardless of how it is consumed.</li>
+<li>Assume that the user knows better than you what a good base text size is for them.</li>
+<li>Use a reset styleheet — I like <a href="http://meyerweb.com/eric/thoughts/2007/05/01/reset-reloaded/">Eric Meyer&#8217;s CSS Reset Reloaded</a> — to set everything to that base size.</li>
+<li>Vary the sizes of elements <em>relatively</em> using ems.</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/12/09/for-only-25-more-this-gift-card-comes-in-green/">For Only $25 More, This Gift Card Comes in Green</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-12-09T00:00:00-05:00" pubdate data-updated="true">Dec 9<span>th</span>, 2007</time>
+        
+         | <a href="/blog/2007/12/09/for-only-25-more-this-gift-card-comes-in-green/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I was just at the online Apple store to buy an iTunes gift card for my mother (who hopefully will not be reading this blog) &#8211; when you arrive from iTunes, it drops you on a page where you can choose from a variety of gift card designs. On this screen, it seems that there is a 1:1 relationship between colors and denominations &#8211; for example, the $25 card only comes in red.</p>
+
+<p>I picked my denomination, and was taken to a page where I could enter a personalized message. Below that, I was offered the opportunity to &#8220;change theme&#8221;:</p>
+
+<div class='p_embed p_image_embed'>
+<img alt="" src="http://blog.rebeccamurphey.com/wp-content/uploads/2007/12/itunes-change-theme.png" />
+</div>
+
+
+<p>I wasn&#8217;t much a fan of the red, so I clicked to choose the green, entered my personalized message, and clicked add to cart &#8211; and only then did I find out that changing the theme also changed my order to a more expensive card. That&#8217;s either extremely poor design, or extremely sketchy.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/12/09/datejs/">DateJS</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-12-09T00:00:00-05:00" pubdate data-updated="true">Dec 9<span>th</span>, 2007</time>
+        
+         | <a href="/blog/2007/12/09/datejs/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Forgot about coming across <a href="http://www.datejs.com/">DateJS</a> in one of my feeds the other day. Haven&#8217;t used it yet, but expect I will next time I have to do much of anything with user date input. I&#8217;ll be especially happy if it does end up getting <a href="http://marcgrabanski.com/article/90/DateJS-JavaScript-Library">integrated with the  jQuery UI datepicker &#8230;</a>.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/12/07/standards-for-html-emails/">Standards for HTML Emails?</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-12-07T00:00:00-05:00" pubdate data-updated="true">Dec 7<span>th</span>, 2007</time>
+        
+         | <a href="/blog/2007/12/07/standards-for-html-emails/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>After a couple of attempts that ended not-so-well, I gave up on HTML emails. I advise people to work with someone who&#8217;s an expert with them, or to at least <a href="http://www.campaignmonitor.com/resources/">use templates that are known to work</a>, and then I wish them well. At a job interview I actually proclaimed my active dislike of HTML emails and general unwillingness to muck with them &#8211; I&#8217;m not sure that went over so well. The news that <a href="http://www.campaignmonitor.com/blog/archives/2007/01/microsoft_takes_email_design_b.html">Outlook 2007 actually took a giant leap backwards in HTML support</a> seals the deal for me. Still, it&#8217;s good to read that <a href="http://www.456bereastreet.com/archive/200712/the_email_standards_project_launches/">some people are trying to bring some sanity to the situation</a>. I wish them luck.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/12/07/more-on-jquery-selectors/">More on jQuery Selectors</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-12-07T00:00:00-05:00" pubdate data-updated="true">Dec 7<span>th</span>, 2007</time>
+        
+         | <a href="/blog/2007/12/07/more-on-jquery-selectors/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Following up on my 13 seconds of selection hell:</p>
+
+<p><a href="http://benjaminsterling.com/jquery-what-are-the-fastest-selector/">jQuery: what are the fastest selectors?</a></p>
+
+<p>Turns out that, as you might expect, <code>$('div.class')</code> is faster than <code>$('.class')</code>, and so is <code>$('div').filter('.class')</code>. Knowing where <em>not</em> to look (&#8220;skip anything that&#8217;s not a div&#8221;) helps make jQuery faster. To which you might say, &#8220;well duh.&#8221; Regardless, the post above does a nice job of demonstrating it pretty plainly, and it&#8217;s a good reminder that, if I&#8217;d wanted to stick with my attribute-based selection, I could have helped my code a little bit by telling it where I expected to find those attributes so it wouldn&#8217;t have had to look through every element on a ridiculously huge page.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#data_entry input, #data_entry select&#39;</span><span class="p">).</span><span class="nx">filter</span><span class="p">(</span><span class="s1">&#39;[name=value]&#39;</span><span class="p">);</span><span class="o">&lt;</span><span class="err">/pre&gt;&lt;/div&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/12/05/software-without-which-i-d-be-hard-pressed-to-do-my-job/">Software Without Which I&#8217;d Be Hard-pressed to Do My Job</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-12-05T00:00:00-05:00" pubdate data-updated="true">Dec 5<span>th</span>, 2007</time>
+        
+         | <a href="/blog/2007/12/05/software-without-which-i-d-be-hard-pressed-to-do-my-job/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><ul>
+<li>
+<strong>vim</strong> A sophisticated text editor with no GUI &#8211; everything is text-based, and all commands are issued from the keyboard. Frightening at first, and then so ridiculously efficient that nothing else makes sense.</li>
+<li>
+<strong>Firefox</strong> Great in and of itself, and the ability to add extensions makes it priceless.</li>
+<li>
+<strong>Firebug</strong> One of said Firefox extensions &#8211; as <a href="http://marcus.org/blog/">Marcus</a> said recently, it&#8217;s hard to imagine how Web 2.0 would have happened without it. The Inspect function, the console, the Net view &#8230; without it I&#8217;d be utterly lost.</li>
+<li>
+<strong>Filezilla</strong> I booted up an old computer of mine and found an FTP client I think I had to either pay for or steal, and it wasn&#8217;t half as good as this. I wish it had bookmarks for moving around servers easily &#8230; alas.</li>
+<li>
+<strong>Pidgin</strong> All my instant messaging personas in one application, with pounces, fine-grained status control and logging. Plus: file transfers seem to work better now. Woo.</li>
+<li>
+<strong>cygwin</strong> In an alternate universe, I get to use a Mac. Until that alternate reality arrives, cygwin gives me the power of the terminal in Windows. These days, I always have at least one cygwin window open most of the time, because sometimes, things are just easier on the command line.</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/12/05/13-seconds-attribute-vs-id-selectors-in-jquery/">13 Seconds: Attribute vs. ID Selectors in jQuery</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-12-05T00:00:00-05:00" pubdate data-updated="true">Dec 5<span>th</span>, 2007</time>
+        
+         | <a href="/blog/2007/12/05/13-seconds-attribute-vs-id-selectors-in-jquery/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Before:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="c1">// select all elements with an id or name attribute of fieldName;</span>
+</span><span class='line'><span class="c1">// some are inputs (name attribute), some are td&#39;s (id attribute)</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">$field</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#&#39;</span> <span class="o">+</span> <span class="nx">fieldName</span> <span class="o">+</span> <span class="s1">&#39;, [name=&#39;</span> <span class="o">+</span> <span class="nx">fieldName</span> <span class="o">+</span> <span class="s1">&#39;]&#39;</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>After:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="c1">// give inputs both a name and an id attribute,</span>
+</span><span class='line'><span class="c1">// and then just select fields and td&#39;s via id</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">$field</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#&#39;</span> <span class="o">+</span> <span class="nx">fieldName</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Savings: 13 seconds over the course of selecting &gt; 100 elements. Thank god for Firebug&#8217;s profiler, which pointed me to the problem in a few seconds. Attribute selectors in jQuery are handy, OK, but they don&#8217;t seem to work for large-scale selections.</p>
+
+<p>A side note: vim made the HTML change easy, once I worked through its quirky regexp syntax which requires you to escape the +:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>s/name="\([^"]\+\)" /name="\1" id="\1" /g</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/12/04/getting-non-developers-on-the-subversion-bandwagon/">Getting Non-developers on the Subversion Bandwagon</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-12-04T00:00:00-05:00" pubdate data-updated="true">Dec 4<span>th</span>, 2007</time>
+        
+         | <a href="/blog/2007/12/04/getting-non-developers-on-the-subversion-bandwagon/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://marcus.net/blog/">Marcus</a> turned me on to subversion when I was working on a project earlier this year and wanted a way to revisit old versions of files. <a href="http://marcus.net/blog/2007/01/19/creating-a-subversion-repository/">Setting up a subversion repository</a> was easy, and while I did download the Tortoise GUI for Windows, I found the command line was pretty easy too.</p>
+
+<p>A few months later, we were wrestling at work with an issue I&#8217;ve confronted at every job I&#8217;ve had: how to maintain a filesystem that &#8230;</p>
+
+<ul>
+<li>allows everyone to have access to any file they might need</li>
+<li>promotes the concept that files are associated with a <em>client</em>, not with a person</li>
+<li>facilitates regular and thorough backups</li>
+<li>provides versioning more sophisticated than multiple files with names like <code>project_outline_rev2.html</code>
+</li>
+<li>does all this without intimidating the hell out of people who aren&#8217;t on good terms with the command line</li>
+</ul>
+
+
+<p>It wasn&#8217;t a typical use for subversion, which is more normally (in my mind) used for version control with straight-up development projects, but the more I thought about it and talked about it with people who had used subversion, the more it seemed to make sense. We&#8217;d be using it to manage an infinite number of concurrent projects related to maintaining a large client&#8217;s web content, and that meant we&#8217;d have to agree on a directory structure beyond the standard branches/tags/trunk. For it to work at all, I was also going to have to convince people &#8211; some of whom were scarred by cvs &#8211; to actually use it. I braced for a full-fledged campaign: sure, it&#8217;s more complex than no system at all, I would argue, but writing HTML is more complex than writing in Notepad, too, and we seem to handle that OK, right?</p>
+
+<p>As it turned out, my campaign lasted all of a day, and wasn&#8217;t much of a campaign at all. One designer suggested using Dreamweaver or VersionCue to address these concerns, to which I said:</p>
+
+<blockquote>
+one of the things i like about subversion (svn) is that it&#8217;s a platform/software agnostic tool. if we used dw for site management, everyone would have to use dw &#8211; for the homepage update i just did, i hardly touched dreamweaver, preferring to do most everything in vim/command line because it was just so much easier for the sort of work i was doing.
+
+i know that at least on the pc side, there is a subversion extension for dreamweaver. i also know on the pc side there&#8217;s a pretty decent gui svn client. i imagine, since macs are getting pretty popular with devs, that there&#8217;s something similar on that side.
+
+i don&#8217;t mean to shoot down dw/vc out of hand, but i think that it would introduce some real limitations vs svn, even though it is tempting because it is a tool we already use. another thing that is great about svn is that it&#8217;s integrated with the whole trac system that stancil has set up, which also includes a wiki and a ticketing system, all of which are linked together. i see *huge* potential here in terms of project management, documentation, and file management that we aren&#8217;t taking advantage of, and that wouldn&#8217;t be available with a dw solution.
+
+&#8230;
+
+it&#8217;s possible that we don&#8217;t need svn for everything, but honestly i think it&#8217;s easy enough to use once you get the hang of it that it would be just as easy as the fileserver approach, with a ton of added benefits. perhaps the only true drawback is the disk space that would be required for versioning psd&#8217;s and such. but disk space is cheap, and it think the extra storage we&#8217;d need would be worth its small cost if we had constant access to everything.
+</blockquote>
+
+
+<p>Our sysadmin already had some repositories set up that weren&#8217;t getting wide use, so setting up another one was trivial. He added a bunch of disk space in anticipation of the new storage demands (while subversion just stores diffs for text files, it stores full copies of each binary file, and we were going to have a lot of those), and I wrote up some instructions for getting people started:</p>
+
+<h3>Download and install the subversion binaries</h3>
+
+
+<ul>
+<li>
+<a href="http://downloads.open.collab.net/binaries.html">for mac</a> (click the download button)</li>
+<li>
+<a href="http://subversion.tigris.org/servlets/ProjectDocumentList?folderID=91">for pc</a> (choose the latest .exe file)</li>
+</ul>
+
+
+
+
+<h3>Download the GUI</h3>
+
+
+<ul>
+<li><a href="http://scplugin.tigris.org/servlets/ProjectDocumentList">scplugin for mac</a></li>
+<li><a href="http://tortoisesvn.net/downloads">TortoiseSVN for pc</a></li>
+</ul>
+
+
+
+
+<h3>Mac folk: update your path to include svn</h3>
+
+
+<ul>
+<li>open terminal</li>
+<li><code>cd ~</code></li>
+<li><code>pico .bash_profile</code></li>
+<li>enter the following:
+<div class="CodeRay">
+  <div class="code"><pre>PATH=&quot;/usr/local/bin:/usr/local/subversion/bin:$PATH&quot;
+export PATH</pre></div>
+</div>
+
+</li>
+<li>press CTRL-O to save</li>
+<li>restart terminal</li>
+</ul>
+
+
+
+
+<h3>Establish ssl certification</h3>
+
+
+<ul>
+<li>open a Terminal window (mac) or Start &gt; Run &gt; cmd.exe (windows)</li>
+<li>type <code>svn ls https://www.svnserver.com/repository/trunk/</code> and hit enter (get the exact URL for your repository; this is just an example)</li>
+<li>enter user/password
+<ul>
+<li>if your username on your machine is the same as your svn username, enter your password.</li>
+<li>otherwise, press enter and you&#8217;ll be prompted for your svn username. enter it.</li>
+<li>enter your svn password.</li>
+</ul>
+</li>
+</ul>
+
+
+
+
+<h3>Getting started and basic workflow</h3>
+
+
+<p>I sat down with a group of initial users to do the initial checkout of the repository and show them the basic workflow. TortoiseSVN makes things especially easy, while scplugin is a bit more rudimentary. Here&#8217;s the workflow I explained:</p>
+
+<ul>
+<li>
+<code>update</code> a folder before you begin work in it; to save time, just update the specific folder, not the whole repo</li>
+<li>make your changes</li>
+<li>
+<code>add</code> any new folders and files you create to the repo &#8211; they won&#8217;t be added automatically!
+</li>
+<li>if you change the structure of a dir, or remove a file, you have to do it via svn!</li>
+<ul>
+<li>
+<code>rename</code> to change a file name or move a file</li>
+<li>
+<code>delete</code> to remove a file</li>
+</ul>
+
+<li>
+<code>update</code> folder prior to commit to receive others&#8217; changes</li>
+<li>
+<code>commit</code> (check in) whenever you reach a milestone or stop work. enter a message with your commit to indicate what you did.</li>
+</ul>
+
+
+
+
+<h3>File structure</h3>
+
+
+<p>Subversion is usually used for managing development projects, but we wanted us to use it to manage an infinite number of small, concurrent projects related to our work maintaining the content on a large client&#8217;s web site. The branches/tags/trunk paradigm didn&#8217;t quite fit here. We ended up keeping the b/t/t setup, but most people just check out the trunk, which contains the following folders:</p>
+
+<ul>
+<li>
+<strong>client_site</strong>, with a directory structure that mirrors the structure of our client&#8217;s web site. This is where we keep most of our files. By mirroring the directory structure of the client&#8217;s web site, we make it easy to find a file if we know the URL of the file on the site.</li>
+<li>
+<strong>projects</strong>, for files related to projects that don&#8217;t fit neatly into the site structure.</li>
+<li>
+<strong>resources</strong>, for image templates, HTML templates, fonts, logos, etc.</li>
+</ul>
+
+
+
+
+<h3>To do</h3>
+
+
+<p>Because we are constantly creating new files and adding them to the repository, some directories are getting unduly large, making <code>update</code>s take a long time, and forcing users to store a lot of unnecessary files locally once they do an <code>update</code>. We need to work out a way to age files so they are still available and easy to locate, but don&#8217;t get picked up as part of the <code>update</code> process.</p>
+
+<h3>Further reading</h3>
+
+
+<ul>
+<li><a href="http://svnbook.red-bean.com/en/1.2/svn.tour.cycle.html">Basic Work Cycle</a></li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/10/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/8/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/01/18/onward/">Onward</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/12/10/js-conditionals/">Two Things about Conditionals in JavaScript</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/12/09/this-is-the-cigarette/">This is the Cigarette</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/29/choosing-presentation-color-scheme/">On Choosing a Syntax Highlighting Scheme for Your Next Presentation</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/25/times-open-science-fair/">Show & Tell</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/rmurphey">@rmurphey</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'rmurphey',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("rmurphey", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/rmurphey" class="twitter-follow-button" data-show-count="false">Follow @rmurphey</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Rebecca Murphey -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'rmurphey';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

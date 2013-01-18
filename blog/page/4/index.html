@@ -1,0 +1,1778 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Adventures in JavaScript Development</title>
+  <meta name="author" content="Rebecca Murphey">
+
+  
+  <meta name="description" content="Right before Dojo 1.5 came out, the Sitepen blog had a great post about the improvements 1.5 would bring for dojo.Deferred. The part that really &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://rmurphey.github.com/blog/page/4/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Adventures in JavaScript Development" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-143877-10']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Adventures in JavaScript Development</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:rmurphey.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/08/29/making-sense-of-dojo-when-a-simple-xhr-caching-example/">Making Sense of dojo.when: A Simple XHR Caching Example</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-29T00:00:00-04:00" pubdate data-updated="true">Aug 29<span>th</span>, 2010</time>
+        
+         | <a href="/blog/2010/08/29/making-sense-of-dojo-when-a-simple-xhr-caching-example/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Right before Dojo 1.5 came out, the Sitepen blog had <a href="http://www.sitepen.com/blog/2010/05/03/robust-promises-with-dojo-deferred-1-5/">a great post</a> about the improvements 1.5 would bring for <code>dojo.Deferred</code>. The part that really caught my eye was <a href="http://docs.dojocampus.org/dojo/when"><code>dojo.when</code></a>, a method that lets you pass a value to a function whether that value is available now or as the result of some asynchronous operation. Either way, you get a &ldquo;promise&rdquo; that <em>when</em> the value is available, the function you provided will run.</p>
+
+
+
+
+<p>This is one of those things that was super-neat when I read about it, but it took me a while to incorporate it into my code &mdash; it&rsquo;s only in the last couple of weeks that I&rsquo;ve had that wonderful moment when I&rsquo;ve said &ldquo;oh, I could totally use <code>dojo.when</code> for that!&rdquo; Moments like these make me very happy.</p>
+
+
+
+
+<p>It&rsquo;s pretty common that an application makes an Ajax request for some data, and then caches that data so the request won&rsquo;t have to happen again; the pattern might look something like this:</p>
+
+
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">myCache</span> <span class="o">=</span> <span class="p">{};</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">function</span> <span class="nx">getSomeStuff</span><span class="p">(</span><span class="nx">stuffId</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="nx">myCache</span><span class="p">[</span><span class="nx">stuffId</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">handleResponse</span><span class="p">(</span><span class="nx">myCache</span><span class="p">[</span><span class="nx">stuffId</span><span class="p">]);</span>
+</span><span class='line'>    <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">dojo</span><span class="p">.</span><span class="nx">xhrGet</span><span class="p">({</span>
+</span><span class='line'>    <span class="nx">url</span> <span class="o">:</span> <span class="s1">&#39;foo.php&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">content</span> <span class="o">:</span> <span class="p">{</span> <span class="nx">id</span> <span class="o">:</span> <span class="nx">stuffId</span> <span class="p">},</span>
+</span><span class='line'>    <span class="nx">load</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">myCache</span><span class="p">[</span><span class="nx">stuffId</span><span class="p">]</span> <span class="o">=</span> <span class="nx">response</span><span class="p">;</span>
+</span><span class='line'>      <span class="nx">handleResponse</span><span class="p">(</span><span class="nx">response</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<p>Here we have a function that takes an ID; the function looks in the cache to see if there&rsquo;s a value stored for the ID, and if so, it passes the stored value to a <code>handleResponse</code> function. If not, it does an XHR to get the data; when the XHR succeeds, it stores the data in the cache and, again, passes the value to the <code>handleResponse</code> function.</p>
+
+
+
+
+<p>There&rsquo;s nothing strictly wrong with this, but I discovered that some neat abstraction opportunities became more clear when I switched to using <code>dojo.when</code> instead:</p>
+
+
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">myCache</span> <span class="o">=</span> <span class="p">{};</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">function</span> <span class="nx">getSomeStuff</span><span class="p">(</span><span class="nx">stuffId</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">dojo</span><span class="p">.</span><span class="nx">when</span><span class="p">(</span>
+</span><span class='line'>    <span class="nx">myCache</span><span class="p">[</span><span class="nx">stuffId</span><span class="p">]</span> <span class="o">||</span> <span class="nx">dojo</span><span class="p">.</span><span class="nx">xhrGet</span><span class="p">({</span>
+</span><span class='line'>      <span class="nx">url</span> <span class="o">:</span> <span class="s1">&#39;foo.php&#39;</span><span class="p">,</span>
+</span><span class='line'>      <span class="nx">content</span> <span class="o">:</span> <span class="p">{</span> <span class="nx">id</span> <span class="o">:</span> <span class="nx">stuffId</span> <span class="p">},</span>
+</span><span class='line'>      <span class="nx">load</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">myCache</span><span class="p">[</span><span class="nx">stuffId</span><span class="p">]</span> <span class="o">=</span> <span class="nx">response</span><span class="p">;</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>    <span class="p">}),</span>
+</span><span class='line'>    <span class="nx">handleResponse</span>
+</span><span class='line'>  <span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<p>Now we&rsquo;re telling our <code>getSomeStuff</code> function to look for a cached value; if it finds one, <code>dojo.when</code> will immediately pass that value to the <code>handleResponse</code> function. If it doesn&rsquo;t find one, it will run the XHR, and <code>dojo.when</code> will magically pass the XHR&rsquo;s response to the <code>handleResponse</code> function instead. This is hot.</p>
+
+
+
+
+<p>This works because <code>dojo.xhrGet</code> returns a &ldquo;promise&rdquo; object with a <code>then</code> method. <code>dojo.when</code> looks to see whether it got a promise object as its first argument; if so, it uses the <code>then</code> method of the promise object to attach the callback provided as the second argument to <code>dojo.when</code>. If not, it simply calls the callback immediately on the first argument. The real magic is actually in <code>dojo.Deferred</code>, not in <code>dojo.when</code> itself. Since all of Dojo&rsquo;s XHR methods return a <code>dojo.Deferred</code> promise, <code>dojo.when</code> will &ldquo;just work.&rdquo;</p>
+
+
+
+
+<p>I found that I was going through my application and ripping out instances of the old code, replacing it with the new. And then I had that &ldquo;oh sh*t I&rsquo;m copying and pasting, aren&rsquo;t I &hellip;&rdquo; moment, and saw my way to an abstraction.</p>
+
+
+
+
+<p>In my application, I was actually caching the responses using the URL from which I&rsquo;d requested them, which works out to be a perfectly unique ID for the data. (This particular part may or may not work in your application.) My abstraction was an essentially drop-in replacement for <code>dojo.xhrGet</code> calls:</p>
+
+
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">cache</span> <span class="o">=</span> <span class="p">{};</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">function</span> <span class="nx">cacheableXhrGet</span><span class="p">(</span><span class="nx">settings</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">settings</span><span class="p">.</span><span class="nx">url</span><span class="p">,</span>
+</span><span class='line'>      <span class="nx">req</span> <span class="o">=</span> <span class="nx">cache</span><span class="p">[</span><span class="nx">url</span><span class="p">]</span> <span class="o">||</span>
+</span><span class='line'>            <span class="nx">dojo</span><span class="p">.</span><span class="nx">xhrGet</span><span class="p">(</span><span class="nx">dojo</span><span class="p">.</span><span class="nx">mixin</span><span class="p">({</span>
+</span><span class='line'>              <span class="c1">// override the load handler</span>
+</span><span class='line'>              <span class="nx">load</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">resp</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>                <span class="nx">cache</span><span class="p">[</span><span class="nx">url</span><span class="p">]</span> <span class="o">=</span> <span class="nx">resp</span><span class="p">;</span>
+</span><span class='line'>              <span class="p">}</span>
+</span><span class='line'>            <span class="p">},</span> <span class="nx">settings</span><span class="p">));</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">dojo</span><span class="p">.</span><span class="nx">when</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">settings</span><span class="p">.</span><span class="nx">load</span><span class="p">);</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nx">req</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<p>I can pass a settings object to <code>cacheableXhrGet</code> that looks exactly like the object I&rsquo;d pass to <code>dojo.xhrGet</code>, but replace the <code>load</code> function before actually passing it to <code>dojo.xhrGet</code>. But before the XHR even has a chance to get set up, I check my cache for a stored response; if I find one, I store it in the <code>req</code> variable, but otherwise I store the XHR there.</p>
+
+
+
+
+<p>In either case, the function defined at <code>settings.load</code> gets the proper response value via <code>dojo.when</code>. For bonus points, I then return either the cached value or the XHR &mdash; which means <em>other code can use the return value of <code>cacheableXhrGet</code> for its own <code>dojo.when</code></em>. How neat is that?</p>
+
+
+
+
+<h2>Conclusion</h2>
+
+
+
+
+<p>Promises and deferred&rsquo;s are a really pleasant tool to have in your JavaScript arsenal once you get the hang of them, and <code>dojo.when</code> seems like a great place to start understanding them.</p>
+
+
+
+
+<p>Out of the box, Dojo makes use of deferreds for all of its XHR functionality, meaning that you can pass around the return value of any Dojo XHR method and do fun things you can&rsquo;t do with jQuery&rsquo;s <code>$.ajax</code>, like add more callbacks to a request after you&rsquo;ve set it up.</p>
+
+
+
+
+<p>I&rsquo;ve just recently started realizing when I could incorporate <a href="http://docs.dojocampus.org/dojo/Deferred"><code>dojo.Deferred</code></a> functionality into my own code &mdash; again, now that I&rsquo;ve got the hang of it, I&rsquo;m pretty sure it&rsquo;s going to dramatically change how I write asynchronous code.</p>
+
+
+
+
+<p><em>Disclaimer: This post contains sample code for illustration purposes. In reality it&rsquo;s all namespaced and these naked functions are actually methods in classes and stuff, and the real code doesn&rsquo;t even look much like the code you see here. I&rsquo;ve also completely ignored questions of when to clear or invalidate the cache. You&rsquo;ve been warned.</em></p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/08/27/code-org-take-2-structuring-javascript-applications/">Code Org, Take 2: Structuring JavaScript Applications</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-27T00:00:00-04:00" pubdate data-updated="true">Aug 27<span>th</span>, 2010</time>
+        
+         | <a href="/blog/2010/08/27/code-org-take-2-structuring-javascript-applications/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It&rsquo;s hard to believe it was not even a year ago that I spoke at the jQuery Conference in Boston about code organization. At the time, I&rsquo;d been thinking for a few months about how to improve my own code and give it more structure, and how to give advice to others about how to do the same.</p>
+
+
+
+
+<p>My talk was about code organization, but really I was talking about how you might organize a single piece of functionality; I didn&rsquo;t even begin to answer the larger question of how to structure a bona fide JavaScript application. Really, that question is almost perpendicular to the one I was tackling at the time; it&rsquo;s a question of strategy, not tactics.</p>
+
+
+
+
+<p>A year later, I&rsquo;d like to share my thoughts on how I&rsquo;m answering it these days.</p>
+
+
+
+
+<h2>First Things First: What&rsquo;s a JavaScript Application?</h2>
+
+
+
+
+<p>GMail is a JavaScript application; this Posterous blog, while it makes use of JavaScript a bit, is probably not, but the admin interface most certainly is. The line can be frustratingly fuzzy, but at the same time it&rsquo;s pretty important to realize when you&rsquo;ve crossed it.</p>
+
+
+
+
+<p><strong>To me, the defining characteristic of a JavaScript application is that the heavy lifting of manipulating and displaying data falls to the browser</strong>, with most communication with the server happening via XHR.</p>
+
+
+
+
+<p>If you find yourself in application land, welcome. Now what?</p>
+
+
+
+
+<h2>My Building Blocks</h2>
+
+
+
+
+<p>My approach to organizing an application is really just an MVC variant, so I don&rsquo;t want to sound as though I&rsquo;ve discovered something novel or new. However, there are a couple of things to note: For one, the term &ldquo;controller&rdquo; has a couple of different meanings to me, as explained below; for two, there are two distinct flavors of &ldquo;views,&rdquo; though I&rsquo;m not sure exactly how important the distinction is.</p>
+
+
+
+
+<p>I also want to be super-clear that I don&rsquo;t tout this as The One and Only Way; it is just a way that has worked for me, a way that I evolve and adapt with every project I work on, and a way that I&rsquo;ve run by a few people and they haven&rsquo;t laughed at me. My point in dissecting it isn&rsquo;t that you&rsquo;ll try to follow it word-for-word; rather, I hope it might get you thinking about  JavaScript applications beyond the DOM.</p>
+
+
+
+
+<h3>Models</h3>
+
+
+
+
+<p>There&rsquo;s nothing particularly unique to models in a JavaScript application. They are responsible for fetching and storing application data and maintaining its integrity in the browser. They fetch data, store data, and provide an API for other application components to get access to that data. There may be more than one destination for the data: memory, the server, or some type of local storage. But if it has to do with managing data, it&rsquo;s the model&rsquo;s job.</p>
+
+
+
+
+<p>Models stay out of the way when it comes to displaying data or responding (at least directly) to user interaction. Those tasks are left up to other pieces of the application, as we&rsquo;ll see below.</p>
+
+
+
+
+<h4>Example</h4>
+
+
+
+
+<p>A simple search application would likely have a search results model, responsible for receiving the current search term, fetching the data for the term, and broadcasting it to the rest of the application. It might also allow for manipulating individual search results, such as indicating that a particular result was a favorite or a dud, though that task might also fall to an individual search result model depending on the needs.</p>
+
+
+
+
+<h3>Widgets and Data Views</h3>
+
+
+
+
+<p>Views comprise HTML (generally in the form of client-side templates) and CSS for a component, and are generally accompanied by a view controller (the  JavaScript related to interacting with the vew; see below for an explanation). The HTML for a view consists of a single parent node with an arbitrary internal structure; the parent node will optionally have one or more classes on it that can be used to target CSS.</p>
+
+
+
+
+<p>There are two flavors of views, in my mind: widgets, which are responsible for supporting user interaction with the application but don&rsquo;t render any application data; and data views that are responsible for displaying and allowing interaction with application data.</p>
+
+
+
+
+<p>Data views are instantiated with the initial data required to populate them; then, their view controllers listen for messages from other pieces of the application to tell them when new or updated data needs to be rendered.</p>
+
+
+
+
+<h4>Examples</h4>
+
+
+
+
+<p>A basic search input box would be considered a widget &mdash; when it is created, it doesn&rsquo;t need any application data in order to render properly. The widget is strictly responsible for allowing the basic interaction of typing a search term and hitting enter; that is, it&rsquo;s not responsible for actually performing the search.</p>
+
+
+
+
+<p>A search results list is an example of a data view; it renders application data <em>and</em>, potentially, allows for interaction with it. Again, though, it&rsquo;s not responsible for performing the search; it just renders data and then allows for interaction with it.</p>
+
+
+
+
+<h3>View Controllers</h3>
+
+
+
+
+<p>View controllers manage interaction with a data view or widget &mdash; interaction by the user, and interaction with the rest of the application. They are responsible for binding and handling events, for broadcasting user interactions with the widget to the rest of the application, and for listening to other pieces of the application to tell them they have new data to render.</p>
+
+
+
+
+<p>View controllers <em>never</em> handle server communication directly; their role is solely to provide a user interface to the application. When something interesting happens to a view or widget, the view controller announces it. When new data is available for a view, the view controller should know how to handle it. But, again, the view controller itself should focus on providing a user interface, not on interfacing with the server.</p>
+
+
+
+
+<h4>Examples</h4>
+
+
+
+
+<p>The view controller for a search box might listen for the user to focus on the search box, hiding placeholder text for the input. Then, it might listen for the user to hit Enter inside the search box; when that happens, it would broadcast to the rest of the application that the user had submitted a search, along with the term that was searched.</p>
+
+
+
+
+<p>The view controller for a search results list might listen for another piece of the application to announce that new search results are available to be displayed. If the results were for the currently displayed search term, it could add them to the list; if they were for a new term, the results list could empty itself and display the new results.</p>
+
+
+
+
+<h3>Application-Level Controllers</h3>
+
+
+
+
+<p>Application-level controllers are the glue of an application. Loosely, there may be one per &ldquo;page&rdquo; of the application, or one per feature. For example, an application that includes a search feature and a checkout feature might have a controller for each feature, even though the checkout feature might spread across multiple pages.</p>
+
+
+
+
+<p>These controllers are responsible for getting the models and views/widgets for a feature in place and talking to each other. So, a controller might first make sure the required models are in place, then tell them to fetch the appropriate data; once the data is available, the controller would instantiate the views for displaying the data. Finally, the controller would broker future interactions between the views and the models.</p>
+
+
+
+
+<h4>Examples</h4>
+
+
+
+
+<p>On a search results page, a user might click a Favorite button on a search result. The search results list&rsquo;s view controller would handle the click, broadcasting a message about the user&rsquo;s action to the rest of the application. The controller would observe this message and pass it, along with any other relevant information, to the search results model, which would in turn pass the information to the server, or store it locally.</p>
+
+
+
+
+<h2>Notes on Enablers</h2>
+
+
+
+
+<p>I&rsquo;ve glossed over a few implementation details that are somewhat tangential to the organization question, but I want to touch on them briefly:</p>
+
+
+
+
+<h3>Pubsub and Friends</h3>
+
+
+
+
+<p>I didn&rsquo;t want to get too specific about how all of this &ldquo;announcing&rdquo; and &ldquo;broadcasting&rdquo; and &ldquo;listening&rdquo; happens, because there are lots of ways to accomplish it. One could use pubsub, custom events, or any number of other solutions. I don&rsquo;t think the actual implementation is important, though personally I lean heavily on pubsub &mdash; what is important is the notion of broadcasting and listening for announcements that something has happened, allowing other components of the application to react appropriately.</p>
+
+
+
+
+<h3>Templating</h3>
+
+
+
+
+<p>If you aren&rsquo;t using a toolkit with templating built in (or, heck, even if you are), I&rsquo;ve kind of fallen in love with <a href="http://github.com/janl/mustache.js/">mustache.js</a> lately. It&rsquo;s a great client-side templating companion, making it dead-simple to turn data into markup without ending up with templates that look more like JavaScript than HTML.</p>
+
+
+
+
+<p>Figuring out how to maintain templates can be tricky &mdash; do you store them in your page&rsquo;s markup? Do you maintain them as separate files requested via XHR and then cached? Or do you put them in your JavaScript? Dojo&rsquo;s <code>dojo.cache()</code> method provides a handy way to keep your templates in separate files and load them via XHR, while interning them into your JavaScript for you if you use Dojo&rsquo;s build tool. I like this.</p>
+
+
+
+
+<h3>Attaching Events to Views</h3>
+
+
+
+
+<p>Another shameless Dojo plug: <code>dijit.\_Templated</code> provides some serious hotness when it comes to attaching events to views. Read up on <a href="http://docs.dojocampus.org/dijit/_Templated"><code>dojoAttachPoint</code> and <code>dojoAttachEvent</code></a>; together with dijit._Widget&rsquo;s <code>connect</code> and <code>subscribe</code> methods, which provide automatic cleanup for you, there&rsquo;s some real power here, which has me writing hardly any selector-based code these days.</p>
+
+
+
+
+<h3>File Structure</h3>
+
+
+
+
+<p>I hesitate to make any particular recommendations here, because the needs of an application can vary widely. However, I tend to have a directory each for models, views (for view controllers and templates), and controllers (for application-level controllers). Those directories &mdash; especially the views directory &mdash; may contain subdirectories, for instance if there&rsquo;s more than one view for a certain type of data.</p>
+
+
+
+
+<h2>Why Go To All This Trouble, Again?</h2>
+
+
+
+
+<p>So this is the part where you might say &ldquo;OMG, srsly, what happened to &lsquo;get some elements, do something with them?!?&rsquo;&rdquo; Let me be clear, that approach may be <em>entirely appropriate</em> for your particular needs; I&rsquo;m not here to convince you otherwise.</p>
+
+
+
+
+<p>But: if your application is complex enough to warrant considering an approach like this, I&rsquo;ve found that in the long run it actually simplifies my code by cleanly separating concerns and providing a decent roadmap for building new features. I can build and test a solid model for some Thinger, and then use that model throughout my code; I can build and test a user interface component for editing a Thinger long before the data exists to support it. I can map &ldquo;pages&rdquo; of my application to application-level controllers, providing a high-level view of what&rsquo;s happening where.</p>
+
+
+
+
+<p>Best of all, paths to code reuse become clear and entanglements become fewer when I keep this division of responsibilities in mind as I code. A search results data view, for example, can be made to accept search results from any model that provides them in the proper format; a search can be initiated and the results displayed without depending on a user entering text into a search input widget.</p>
+
+
+
+
+<p>Dividing the responsibilities into well-defined sections leads to components that are truly pluggable, often in ways you may not have even imagined when you wrote them. In an application that evolves over time, it&rsquo;s hard to overstate the benefits of this.</p>
+
+
+
+
+<h2>In Conclusion &amp; A Plea</h2>
+
+
+
+
+<p>If you find yourself working on a JavaScript application, I can&rsquo;t recommend enough that you consider, at length, what underlying structure makes the most sense; it&rsquo;s almost inevitably more complex than you can manage via the DOM alone. Again, my answer isn&rsquo;t the right answer, it&rsquo;s just an answer, but I hope it helps you start thinking about what the right answer might be for your project.</p>
+
+
+
+
+<p>If you&rsquo;re interested in this stuff, I&rsquo;d encourage you to check out <a href="http://javascriptmvc.com/">JavaScriptMVC</a>, if only to see how they approach these problems; <a href="http://cujojs.com/">Cujo.js</a> is another framework, built on top of Dojo, that aims to enter this space, but you&rsquo;ll have to wait until mid-September to see it.</p>
+
+
+
+
+<p>Finally: If you have your own thoughts to share about how to approach these large application questions, I&rsquo;m pleading with you to write your own blog post(s) about them. If you have other reference material on the topic, I beg you to share it. As more and more people transition from simple JavaScript enhancements to non-trivial applications, the need for education is huge.</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/08/24/dear-conference-organizer/">Dear Conference Organizer</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-24T00:00:00-04:00" pubdate data-updated="true">Aug 24<span>th</span>, 2010</time>
+        
+         | <a href="/blog/2010/08/24/dear-conference-organizer/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+<p>Thank you for the invitation to speak at your conference, and your offer to pay my hotel and airfare in exchange.&nbsp;I notice that you are selling tickets for upwards of $1,500, in addition to hotel and travel costs. In exchange, you are hosting a three-day event, meals, a USB drive, a shirt, and a binder.</p>
+<p>We need to talk, and not about the binder.</p>
+<p>TXJS was a one-day conference with approximately a $30k budget &#8211; some tickets cost a whopping $29, and the most expensive tickets were $109 &#8211; and yet it managed to offer exactly what you&#8217;re offering to me to its out-of-town speakers: hotel and travel. It had two nights of open-bar parties; a shuttle bus to get people to and from the amazing, eclectic, venue; catered breakfast and lunch; an open bar at the event itself; and a speaker and VIP brunch the following day. It also had some of the best JavaScript minds in the business on stage and in the audience, drawing people from around the country and beyond.&nbsp;</p>
+<p>I hope you can appreciate the disconnect here. It&#8217;s not so much that I want to get paid &#8211; I have gladly and eagerly spoken at lower-cost conferences without even getting my hotel compensated &#8211; as the fact that I know now that conferences just don&#8217;t have to cost that much. When they do, it&#8217;s hard to get on board with lending my name for free when the conference stands to have revenue of <em>hundreds of thousands of dollars</em> and I know I only needed revenue tens of thousands to put on an amazing event.&nbsp;</p>
+<p>As a self-employed consultant, speaking at a conference has, at best, intangible benefit to me, and non-trivial costs. You and many other organizers can seem as though you assume the benefit is obvious, and the costs negligible. In fact, agreeing to a speaking engagement &#8211; one that requires two non-working days for travel, a non-working day for speaking, and whatever prep time is required to actually put together my talk &#8211; is a tough decision regardless of how much tickets cost, especially for someone without corporate backing or a product to promote. Call me selfish, but I need to be very clear that there&#8217;s a benefit to me. A high-dollar conference likely to attract almost exclusively corporate-backed attendees with at best a peripheral relationship to my area of expertise is exactly the kind of conference where it&#8217;s <em>not</em> clear what the benefit will be. Being away from home and work for three days, even in a nice hotel, just doesn&#8217;t count.&nbsp;</p>
+<p>&#8211;</p>
+<p>Finally: To all of the TXJS speakers, we heart you unbelievably and stand in awe that when we asked you to present at an event that had never existed before, each and every one of you said yes without batting an eye. I hope you know that we know that even with the open bar and the parties and the shuttle and the venue and all of it, we couldn&#8217;t have had a conference without you.&nbsp;</p>
+</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/08/21/enterprisedojo-com-uses-jquery/">EnterpriseDojo.com Uses jQuery!</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-21T00:00:00-04:00" pubdate data-updated="true">Aug 21<span>st</span>, 2010</time>
+        
+         | <a href="/blog/2010/08/21/enterprisedojo-com-uses-jquery/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>And you should too &#8230; for your WordPress blog that came with jQuery already installed and probably barely even needs JavaScript in the first place.&nbsp;</p>
+
+
+<p>Here&#8217;s an idea: Let&#8217;s have an honest discussion about when a given solution makes sense and when it doesn&#8217;t, rather than mocking a contributor to that discussion for choosing a perfectly appropriate tool for a perfectly mundane task. <a href="http://enterprisedojo.com">EnterpriseDojo.com</a> is a blog about using Dojo in the enterprise, not a blog about using Dojo on blogs.&nbsp;Snickering at its use of jQuery is approximately as useful as pointing to <a href="http://www.google.com/trends?q=jquery%2Cdojo%2Cyui">this graph</a> and saying case closed, leaving more reasonable, thoughtful people to explain <a href="http://stackoverflow.com/questions/2450696/what-happened-to-dojo-in-2008/2451785#2451785">all the ways that graph doesn&#8217;t tell us a&nbsp;damn thing</a>.&nbsp;</p>
+
+
+<p>I want to be very clear, as the dust settles around my several recent rants: jQuery has its place, and it is a very, very big place. It is a lovely DOM, Ajax, and events library, and a great way to get certain things done quickly, especially for people who may not have the luxury of learning the inner workings of JavaScript (noble a goal as that is).&nbsp;There was a time when DOM and Ajax and events questions felt like&nbsp;<em>the</em> questions of the day, and jQuery showed us how to answer those questions using a simple, easy-to-learn API that suddenly made JavaScript accessible to the masses. Other libraries solved the same questions but those solutions felt ugly and clunky and goshdarnit, <em>hard</em>, and I give jQuery the utmost credit for making JavaScript suck so much less when all I wanted to do was show or hide or slide a thing or load some content onto my page. I&#8217;ll even grant that it can be used as a piece of a large application solution, though I question the wisdom of doing so for reasons outlined in <a href="http://blog.rebeccamurphey.com/on-jquery-large-applications">another post</a>. Heck, I&#8217;ll even grant that &#8220;enterprises&#8221; aren&#8217;t off their rockers to use it &#8211; for the things it was meant to be used for.&nbsp;</p>
+
+
+<p>What upsets me is when smart people seem to say that jQuery&#8217;s victory in an internet-wide popularity contest suggests, well, anything at all when it comes to more complex needs. It upsets me because my clients hear those suggestions, look at that same well-marketed graph, and I am left explaining to them that, yes, jQuery is popular, but it&#8217;s popular because it answers a small set of questions easily and well &#8211; even for people who don&#8217;t even know JavaScript! &#8211; and you, dear client, have vastly larger questions than that.</p>
+
+
+<p>At the end of the day, these toolkit decisions ought to be about more than a popularity contest; jQuery may be the right answer, or part of the right answer, but it&#8217;s imperative, to me, that my clients understand the scope of the question first. It&#8217;s imperative that they make their decisions based on a full understanding of pros and cons, risk and reward, cost and benefit &#8211; not based on a graph, not based on a popularity contest.</p>
+
+
+<p>So again I say: we, as a community, and especially the influential ones among us, do well when we elevate the conversation beyond that contest and acknowledge that choosing the right toolkit depends on first understanding what you&#8217;re choosing the toolkit for. We do well when we educate teams and decisionmakers on the lessons we&#8217;ve learned in the time since DOM, Ajax, and events were the big question of the day, on the best practices that have emerged, on the situations where we&#8217;ve, gasp, had to look beyond jQuery &#8211; either to other tools or other toolkits &#8211; for the answers. And we do well when we start showing them how they can do the same.</p>
+
+
+<p><em>An aside: Some people I like a lot have pointed out that in the midst of all of my complaining, I have not come out and offered a solution. This is fair. Two things: One, I have not wanted this conversation to collapse into Dojo vs. jQuery vs. YUI vs. Ext vs. MooTools vs. whatever, because if it does, I think we&#8217;ve missed the crux of the matter: that different tools do different things, that some set out to answer complex questions and some do not. If anyone has been unclear, which I rather doubt, my personal preference of late has been to use Dojo. I do not recommend using Dojo for everything under the sun, but I find it offers a lot of utility when writing non-trivial applications. I cannot make a compelling argument for using it vs. YUI, simply because I don&#8217;t know YUI well enough. I can&#8217;t even make a compelling argument for using it vs. Ext, except for licensing issues that may or may not be relevant in a given scenario. Two, if you&#8217;re disappointed that I haven&#8217;t offered a solution, especially a jQuery-based one, I apologize. However, I feel there are too many viable existing solutions out there already, and I haven&#8217;t come up with a good reason to promote a jQuery-based solution besides jQuery&#8217;s popularity. And, well, see above for my thoughts on that.</em></p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/08/14/2-years-in-some-thoughts-on-working-for-yourself/">2 Years in, Some Thoughts on Working for Yourself</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-14T00:00:00-04:00" pubdate data-updated="true">Aug 14<span>th</span>, 2010</time>
+        
+         | <a href="/blog/2010/08/14/2-years-in-some-thoughts-on-working-for-yourself/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Two years and three weeks ago, I lost my job. My partner and I had just had an expensive deck built; I&rsquo;d just bought a gratuitously fancy grill to go on it. My token severance check was in the mail &mdash; I&rsquo;d spend most of it to be able to keep my work computer. And so, six-pack of Yuengling and a pack of Parliament Lights in hand &mdash; I hadn&rsquo;t smoked in years &mdash; I sat on said deck near said grill, contemplating a world I&rsquo;d last contemplated when I, age 6 at the time, came home in the middle of the day to find my just-laid-off dad sitting on the porch.</p>
+
+
+
+
+<p>It was not a good day.</p>
+
+
+
+
+<p>Two years on, things look a lot better than they did. My &ldquo;salary,&rdquo; as best as I can figure it, is comfortable. Figuring it is hard: I travel to conferences whenever I want, and work pays for them. I buy new equipment and software when I want, and work pays for it. I don&rsquo;t work a certain number of hours in a day or a week or a month, so I&rsquo;ve been able to get my pilot&rsquo;s license, spend two weeks in Hawaii without drawing on some meticulously calculated vacation balance, and take on projects like TXJS without having to get anyone&rsquo;s blessing &mdash; hard to put a value on that. On the flip side, I&rsquo;ve had more sleepless nights than I&rsquo;d dare count, wondering where the money was going to come from next month, wondering whether it was time to walk away from an abusive client with no other work on the horizon, wondering whether my relationship could tolerate all the ups and downs, wondering how it was that little ol&#8217; me, the Independent Consultant, had any business telling people what to do.</p>
+
+
+
+
+<p>People ask me, now and then, what advice I have for them about being independent, about working for myself. More than a few of them have suddenly found themselves sitting on that proverbial deck, waiting for that severance check (or not). I&rsquo;ve written many an email, but I thought I&rsquo;d take a few minutes to try to assemble all of them into a coherent post.</p>
+
+
+
+
+<h2>The Touchy-Feely</h2>
+
+
+
+
+<h3>Network</h3>
+
+
+
+
+<p>Once I decided I was going to stop looking for a job and work for myself, I wrote an email to absolutely everyone I could think of who might help me find work. It felt weird, and it&rsquo;s also exactly how I landed a job that paid the bills fairly solidly for the next nine months. When you decide to take the plunge, it&rsquo;s imperative that you let people know. Let them know you&rsquo;re looking for work, and what kind of work you&rsquo;re willing to do. Get out and participate in your local tech community, giving talks and connecting with people who can connect you with people. Start writing blog posts, answering questions on forums, helping people in IRC channels. Become known as a helpful and knowledgable person. You do not get to be an introvert. Getting your name out there, when you start and constantly after that, is the No. 1 most valuable thing you can do &mdash; at least as important as being good at what you do.</p>
+
+
+
+
+<h3>Dive in and Do</h3>
+
+
+
+
+<p>I cost a fair bit of money. In return for paying that, clients expect that I can come up to speed on their project quickly and start solving their problems for them &mdash; they don&rsquo;t want to pay for a long ramp-up period before they can even accurately assess whether my time was a good purchase. Part of doing this is having solid fundamental skills &mdash; an understanding of basic application development patterns, version control systems, development environments, etc. When I don&rsquo;t have those fundamental skills for a particular project and I expect that may get in the way of a quick ramp-up, I make that very clear to my clients.</p>
+
+
+
+
+<p>More generally, it&rsquo;s critical that you demonstrate value as soon as you can, and make sure your clients are well aware of the progress you&rsquo;re making &mdash; if they don&rsquo;t ask you, tell them anyway. If you get stuck on a particular problem, part of your job is to recognize that you&rsquo;re stuck, and honestly assess whether this is your own shortcoming or not. If it is, think long and hard about whether you should bill the client for your learning time; if it&rsquo;s not, at least let the client know about the roadblock and your plan for overcoming it &mdash; you never know, the client might re-frame the problem in a way that&rsquo;s easier to solve.</p>
+
+
+
+
+<h3>Don&rsquo;t Specialize &hellip; Yet</h3>
+
+
+
+
+<p>When you first start, it pays to be open-minded about the kind of work you&rsquo;ll take on. It helps get those bills paid, but also, it helps you zero in on exactly how you&rsquo;re good at providing value to clients. The value you provide may be entirely different than the value you were providing at your job, or even than how you thought you provided value in general. Over time, you can start to market yourself using true stories of how you helped real live clients, and start to develop your niche.</p>
+
+
+
+
+<h3>Think Global (and favor clients who do, too)</h3>
+
+
+
+
+<p>I have had clients in California, Florida, New York, and places in between, but I&rsquo;ve never <em>needed</em> to travel to any of them. I find that the work I do is incredibly time and place independent, as long as the client has good systems in place. This means version control, a development environment I can ssh to, liberal use of IM, a sane deployment process (read: not FTP), and some sort of project management tool and/or ticketing system. Projects that have lacked these systems have been more challenging, and these days I tend not to accept them.</p>
+
+
+
+
+<h3>Don&rsquo;t Accept Abuse</h3>
+
+
+
+
+<p>There are terrible clients out there, but you do not have to work for them. If a client is impossible despite your best efforts to improve the situation, quit in a professional manner but without remorse. The client is not always right. You will find more work from someone better. Every. Single. Time.</p>
+
+
+
+
+<h3>Ignore the Economy</h3>
+
+
+
+
+<p>One question that&rsquo;s come up a lot is how I think the economy has affected my ability to find work. Lehman Brothers would declare bankruptcy less than two months after I lost my job; the Dow would lose 3,000 points in the following weeks. My general theory on the economy question is this: rarely is full-time employment of a web worker an efficient distribution of labor, unless you are working for a very, very large company. The volume of work can fluctuate tremendously. I think of all the hours at previous jobs when there was literally nothing to do, yet the companies kept me around for the moment when there was. This was dumb. I&rsquo;d like to think that as companies are looking for ways to cut costs, they&rsquo;ll realize that was dumb, and bring people on as needed. The flip side of that is that those displaced workers are now competing for the consulting work. In the end, I think the economy may be a bit of a wash if you&rsquo;re good at what you do.</p>
+
+
+
+
+<h3>Get Support</h3>
+
+
+
+
+<p>This feels like the single most discouraging thing I have to tell people: I am not sure I could have done this without the knowledge that the bills would still get paid if I failed. Our double-income-no-kids salary is embarrassing, but we were very intentional when we bought our house that we wouldn&rsquo;t take on more than we could afford with one salary, no matter what the lenders told us we could have. My partner&rsquo;s employer allowed me to enroll in their insurance coverage almost as if I were her spouse (I had to wait a few months for open enrollment, costly months I wouldn&rsquo;t have had to wait if we were married). The comfort of this knowledge has been amazing, in those first few months when it became clear that I just might not need a job and in those dark months when it&rsquo;s been unclear where the next check would come from. I am sure working for yourself is possible without these stars aligning, but it would require a braver soul than me.</p>
+
+
+
+
+<h2>Practical Matters</h2>
+
+
+
+
+<h3>Have Clear Payment Terms (and realistic expectations)</h3>
+
+
+
+
+<p>I learned early on that I can&rsquo;t expect anything quicker than Net 30, and that&rsquo;s a <em>long</em> time &mdash; as much as 60 days after I did the work, assuming I bill monthly. One client failed to pay due to some issues with their accounting department, and it got to the point where I had to let them know that I couldn&rsquo;t continue working with them until I got paid. A deadline was looming; a check arrived FedEx the next day. Be clear about your payment terms. You&rsquo;ll get Net 15 if you&rsquo;re lucky; Net 30 is standard. Incentivize them with late penalties if you need, and don&rsquo;t hesitate to contact a client once that deadline passes.</p>
+
+
+
+
+<h3>Decide What You&rsquo;re Worth</h3>
+
+
+
+
+<p>Honestly evaluate what your fee system should be, then stick to it. People who want to pay you less will cause other headaches that will make you wish you&rsquo;d charged them more without fail. If you enter into any retainer situations, make sure the terms are crystal clear to both sides. Generally retainers work where the client purchases a minimum number of hours per month (potentially in exchange for a bulk discount). Communicate with them if they are not using their minimum hours, but try hard not to end up in a situation where you&rsquo;ve cleared your plate for a client who then doesn&rsquo;t need you as much as they thought they would. On the flip side, if the client has promised you 30 hours a week because they overestimated a task, but you&rsquo;re so good the work is only taking you 15, make that very clear to the client and move toward arriving at a new arrangement quickly. They&rsquo;ll appreciate your honesty, and you can free up your time for other work.</p>
+
+
+
+
+<h3>Decide How Much You Want to Work</h3>
+
+
+
+
+<p>Be clear about your availability if it&rsquo;s not 24/7. Let clients know what the best way is to contact you. For me, for example, I hate being interrupted by phone calls, and greatly prefer IM over email for quick exchanges. I&rsquo;ve learned to tell my clients this up front. For your own sanity, contemplate whether there&rsquo;s a minimum number of hours you&rsquo;re willing to work on a project. Too many times I&rsquo;ve spent more time discussing a project than actually doing it. Make sure you account for that discussion time, and for the cost of getting you to sit at your computer rather than playing outside.</p>
+
+
+
+
+<h3>Get an Accountant</h3>
+
+
+
+
+<p>If you find yourself making any money at all, get an accountant. Taxes are complicated for self-employment. April 15 will either suck or it will suck a whole lot. An accountant will help you figure out estimated payments and advise you on the best way to keep as much of your money as you can. For me, that meant forming an LLC, which meant a lot more paperwork throughout the year, but a lot more money in my pocket at the end of it.</p>
+
+
+
+
+<h2>So, Go!</h2>
+
+
+
+
+<p>This working for yourself thing is hard. It&rsquo;s so very important to be good at what you do, and yet being good at what you do has so little to do with being able to pull off working for yourself. On one level, I wish more people would do it &mdash; I believe it achieves a far more efficient distribution of skills and labor while allowing for some serious specialization. On the other hand, the instability of it ranges from mildly uncomfortable to downright terrifying, and so reality dictates that most people will wander back to the full-time world soon enough, and the independent thing will be but a blip on the resume. I, though, feel lucky I&rsquo;ve made it this long.</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/08/11/on-rolling-your-own/">On Rolling Your Own</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-11T00:00:00-04:00" pubdate data-updated="true">Aug 11<span>th</span>, 2010</time>
+        
+         | <a href="/blog/2010/08/11/on-rolling-your-own/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>There&rsquo;s been a lot of activity around my last post, <a href="http://blog.rebeccamurphey.com/on-jquery-large-applications">On jQuery &amp; Large Applications</a>. A number of people have asked me why, exactly, I&rsquo;m so opposed to using jQuery as part of a roll-your-own solution.</p>
+
+
+
+
+<p>To answer that, let&rsquo;s start by looking at (some of) the pieces my ideal large application solution might include:</p>
+
+
+
+
+<ul>
+<li>DOM manipulation tools</li>
+<li>Ajax tools</li>
+<li>A dependency management and build system</li>
+<li>Clear patterns for code organization, such as namespaced modules</li>
+<li>An inheritance system, preferably one that offers multiple inheritance, for sharing code across modules and staying DRY</li>
+<li>A non-DOM-centric, loosely coupled API for communication between modules</li>
+<li>A widget system that makes use of the inheritance system, with lifecycle management (setup/teardown) and templating</li>
+<li>A system for maintaining templates separate from JavaScript while interning them into the build to eliminate HTTP requests</li>
+<li>A system for abstracting RESTful server communication</li>
+<li>For a UI-intensive project, a rich widget system pluggable to arbitrary data sources and designed with an easily-extended API</li>
+<li>For an enterprise project, a11y and i18n provisions, as well as clear patterns for file organization</li>
+</ul>
+
+
+
+
+<p>To all of you who have said you can do this yourself, you win. I can&rsquo;t argue with you without sounding like I&rsquo;m saying you&rsquo;re too dumb, and you&rsquo;re probably not.</p>
+
+
+
+
+<p>But here&rsquo;s my question: why? What, exactly &mdash; <strong>exactly</strong> &mdash; do you gain by putting all of this together for yourself, rather than using the pieces you need of a toolkit that provides all of this out of the box? Because here are a few things I think you lose:</p>
+
+
+
+
+<ul>
+<li>Integration. Is your abstracted RESTful data API designed to talk to your widget system that&rsquo;s designed to talk to your template system? That&rsquo;s hott. Now what about when a new version of one of those components comes out that violates an assumption you made?</li>
+<li>Maintenance. I heart the good folks who have put together individual answers to these individual questions, but they have no obligation to continue being the good folks they are, and they certainly have no obligation to do it on any sort of schedule. Remember all those plugins that broke with jQuery 1.4? That sure was fun.</li>
+<li>Documentation. I&rsquo;m going to grant you, right now, that jQuery is one of the best-documented JavaScript libraries out there, hands down. But what about all these other pieces you&rsquo;re putting together? Especially the ones you really are rolling on your own, like that templated widget thing that communicates so nicely with your abstract data API. There are a wealth of resources for understanding, troubleshooting, and using these pieces in established toolkits. Where will the next developer turn when they have questions about yours?</li>
+<li>Experience. Like I said, I get that you&rsquo;re smart. Possibly smarter than me. That&rsquo;s cool. But are you smarter than the combined wisdom of a team of people that has been thinking about these questions for years? Are you sure your solution has thought through all the questions they have?</li>
+</ul>
+
+
+
+
+<p>I&rsquo;ve noticed that, in the conversations I&rsquo;ve had the last few days, it seems to fall to me to &ldquo;prove&rdquo; that a roll-your-own solution that includes jQuery isn&rsquo;t advisable. Perhaps that&rsquo;s fair &mdash; &ldquo;you started it!&rdquo;, you might say, and that I did. But simultaneously, others argue that jQuery never set out to answer these questions, and so it&rsquo;s not jQuery&rsquo;s fault that people are trying to use it in ways it wasn&rsquo;t intended to be used. I have waited in vain to hear a compelling reason why jQuery <em>should</em> be part of a large application solution, to hear why I should recommend a roll-your-own solution that includes jQuery to my clients. The extent of the argument seems to be &ldquo;because I like it, and it doesn&rsquo;t force me to think a certain way.&rdquo;</p>
+
+
+
+
+<p><a href="http://www.youtube.com/watch?v=vciEDI3dD8I">No one puts baby in a corner</a>. Got it. But the straw man-ness of this argument has me, literally, chuckling right now. Let&rsquo;s not confuse a mythical one-size-fits-all solution with a toolkit that provides, well, <em>tools</em>. Tools to do all sorts of things, tools meant to work together, tools developed and tested and maintained by a whole big team of smart people, tools that are, actively, being used in really frigging big, really frigging enterprisey applications.</p>
+
+
+
+
+<p>I very purposefully didn&rsquo;t propose a particular alternate solution in the original post, but it&rsquo;s hardly a secret that my personal favorite, of late, has been Dojo. Not because it purports to solve every problem or prescribes how to solve them, but because it gives me so many tools to use to solve a given problem. Time and again I find that &ldquo;Dojo already did that&rdquo; &mdash; they already wrote the tool I’m wishing I had. Now I don&rsquo;t have to write it, and, perhaps more importantly, I know it was written to work with all of the pieces I&rsquo;m already using, and when I use it I’m not risking duplication of code or a lack of testing, maintenance or support. Win.</p>
+
+
+
+
+<p>But let&rsquo;s be very clear: no one&rsquo;s forcing me to use that component! No one is forcing me to do things a certain way, any more than jQuery is &ldquo;forcing&rdquo; me to think of my application entirely in terms of the DOM. I can write my own component if I want, or use someone else&rsquo;s if I want, or change it a bit if I want! For example, on a current project I pulled in mustache.js because the project had a lot of templates that had already been written to use it. The brilliant thing, though, was that integrating mustache.js into dijit._Templated instead of the standard templating system was trivial. That component, and all the others in Dojo and Dijit, are architected explicitly <em>not</em> to be one-size-fits-all. They provide a rock-solid base for large application development, for getting up and running quickly using a bevy of ready-made solutions, but also provide so many extension points that you can turn those solutions on their head if you want or need.</p>
+
+
+
+
+<p>Garann Means, whose blog you should be reading, took a bit of issue with my original post in <a href="http://www.garann.com/dev/?p=186">model-view-controller and comfy clothes</a>.</p>
+
+
+
+
+<blockquote class="posterous_medium_quote"><p>I do agree that it benefits everyone to be working in the same setup and making use of tools that have been vetted by geniuses whose entire job is to create such things. But I&rsquo;m dubious about any approach which comes too close to promising one size fits all. If you&rsquo;ve ever sewn a dress, you understand that one size fits all is technically possible, but some people are going be left with a lot of excess while others will scarcely be able to breathe.</p></blockquote>
+
+
+
+
+<p>Carrying on that metaphor, these pieces provided by Dojo &mdash; or any other comprehensive toolkit, for that matter &mdash; are but starter patterns, and thread, and scissors, and pins, and a sewing machine, and OK I&rsquo;m stretching the metaphor, now, but my point is they&rsquo;re definitely not finished one-size-fits-nobody garments. On the other hand, if I decide to use jQuery in a large application, it can feel like I&rsquo;ve been given a black marker and some of that crinkly brown paper, and now it’s up to me to draw a pattern and then come up with all those other pieces, too. Intellectually interesting and pleasingly crafty, perhaps, but not particularly efficient, sustainable, repeatable, or maintainable.</p>
+
+
+
+
+<p>So again I ask, in all seriousness and in hopes of fostering a good discussion: Why? jQuery provides you with DOM, Ajax, and event management tools, but little else. There are tools <em>designed</em> for building large applications, designed to provide all of the pieces I want and so many more it&rsquo;s not even funny, and they provide you with DOM, Ajax, and event management tools, too. What&rsquo;s the compelling case for rolling your own solution that includes jQuery instead?</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/08/09/on-jquery-large-applications/">On jQuery & Large Applications</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-09T00:00:00-04:00" pubdate data-updated="true">Aug 9<span>th</span>, 2010</time>
+        
+         | <a href="/blog/2010/08/09/on-jquery-large-applications/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><em>Update: I&rsquo;ve written a separate post on the wisdom of <a href="http://blog.rebeccamurphey.com/on-rolling-your-own">rolling your own</a> large application toolkit that incorporates jQuery.</em></p>
+
+
+
+
+<p>I&rsquo;ve been thinking a lot lately about JavaScript applications. As my skills have evolved, I&rsquo;ve had the privilege of working on more actual applications, and I&rsquo;ve gotten further and further from clients who want to add a bit of Ajax or bling to an otherwise fairly traditional web site.</p>
+
+
+
+
+<p>The most interesting applications I work on are client-side intensive: the server is responsible for providing data as JSON to the client, and most everything else &mdash; templating, state management, data management, site navigation, and of course user interaction &mdash; is left to the client side.</p>
+
+
+
+
+<p>It&rsquo;s a lovely way of writing an application. There&rsquo;s no need for me to touch server-side code; in some cases I work with a server-side developer to decide what the data they send will look like, but in others I just take what an API already provides and make it work. I get to use the same templating framework across projects, regardless of server-side technology, and I can prototype complex interactions before the server side even exists.</p>
+
+
+
+
+<p>This is a land where HTML, CSS, and JavaScript are almost all you need, and I like it. I&rsquo;ve become a firm believer in moving giant hunks of functionality that used to belong to the server over to the client. For a variety of reasons, I think it&rsquo;s clear that this is where most interesting web development is headed, to the extent it&rsquo;s not already there.</p>
+
+
+
+
+<hr />
+
+
+
+
+<p>This style of building an application changes the front-end development game. In fact, &ldquo;development&rdquo; may no longer be an adequate description; we&rsquo;re moving into the realm of engineering, here. We&rsquo;re not using JavaScript to add a bit of bling to our sites &mdash; a slideshow here, some Ajax there &mdash; we&rsquo;re architecting an <em>application</em>, damnit. We can&rsquo;t just write some procedural code that binds a bunch of anonymous functions to some events and call it a day; if we do, I can tell you from experience that we&rsquo;re going to end up with a steaming pile of unmaintainable crap.</p>
+
+
+
+
+<p>Among a host of questions presented by these sorts of applications, some of the most interesting to me are:</p>
+
+
+
+
+<ul>
+<li>What are the units of functionality that will make up the application?</li>
+<li>How will those pieces be organized into units of code?</li>
+<li>How will those pieces communicate with each other?</li>
+<li>How will dependencies between components be expressed and managed while adhering to the principle of loose coupling?</li>
+<li>How will components manifest themselves in the DOM? Do they need to?</li>
+<li>How will we persist data across URL and page loads?</li>
+<li>How will we manage communication with the server?</li>
+<li>How will we make sure users only see the data they&rsquo;re allowed to see?</li>
+</ul>
+
+
+
+
+<p>At the risk of making a broad generalization, this isn&rsquo;t the way today&rsquo;s average JavaScripter learned to think. The mantra of jQuery, the most popular JavaScript library on the internets, is &ldquo;get some elements, do something with them&rdquo; &mdash; perfectly terrible preparation for analyzing an application from a perspective other than the DOM. And, IMHO, therein lies a tremendous problem.</p>
+
+
+
+
+<hr />
+
+
+
+
+<p>As more and more application logic moves to the browser, I&rsquo;m eager to see the JavaScript community rise to the challenge, but instead it feels like the opposite is happening. People with little understanding or appreciation of these questions are taking on projects that demand these questions be answered. The result is a land of fragile code that gets the job done while giving the finger to the next developer; a land of code so tightly coupled, so deeply beholden to the DOM, so blatantly not reusable or extensible or maintainable as to render every subsequent commit a complete crapshoot, as liable to cripple the application as not. The viability of the project is threatened, and so is the reputation of JavaScript.</p>
+
+
+
+
+<p>We are better than this. JavaScript, even that old-fashioned browser kind, is a language worthy of respect, not a thing to be dreaded. But &mdash; and here&rsquo;s the sentence I have struggled 10 months to realize and an hour to write: in order to prove that we are better than this, we must make abundantly clear to the budding developers, to the project managers, to the enterprises, to anyone intending to build a remotely complex JavaScript application, that there&rsquo;s more to JavaScript than jQuery. The questions are bigger, the answers more complex, and the relevant skills, alas, a bit harder to come by.</p>
+
+
+
+
+<p>We have to make clear that, in fact, jQuery is but a hammer. When it comes to building these intensively client-side applications, we&rsquo;re talking about building skyscrapers, for god&rsquo;s sake. The problems solved by a hammer are the least of our concerns.</p>
+
+
+
+
+<hr />
+
+
+
+
+<p>It was just a few months ago that I gave a presentation on <a href="http://www.slideshare.net/rmurphey/building-large-jquery-applications">building large jQuery applications</a>. I emphasized jQuery&rsquo;s role as strictly a DOM and Ajax tool, and demonstrated a few other tools &mdash; John Resig&rsquo;s <a href="http://ejohn.org/blog/simple-javascript-inheritance/">simple inheritance</a>, James Burke&rsquo;s <a href="http://requirejs.org/">RequireJS</a> dependency management and build tool, Jan Lenhardt&rsquo;s <a href="http://github.com/janl/mustache.js/">mustache.js</a> &mdash; that one would want to bring to the table for such an undertaking.</p>
+
+
+
+
+<p>But to what end do we assemble said hodgepodge of tools? Is it just so we can continue to &ldquo;use jQuery&rdquo;?</p>
+
+
+
+
+<p>jQuery&rsquo;s API is, indeed, dead-simple, but we are smart people! We are building skyscrapers! When it&rsquo;s time to write a complex application, and we need all of these things that jQuery doesn&rsquo;t offer, can we not learn to use another hammer &mdash; learn that <code>dojo.place('&lt;div&gt;I am new!&lt;/div&gt;', oldDomElement, 'last')</code> means the same thing as <code>$('&lt;div&gt;I am new!&lt;/div&gt;').appendTo(oldDomElement)</code> &mdash; if learning it gives us access to legions more functionality than jQuery even aspires to provide?</p>
+
+
+
+
+<p>Do we assemble this hodgepodge because finding jQuery developers is perceived as an easier task than finding practitioners of another library, even though someone saying they &ldquo;know jQuery&rdquo; is little indication that they will know how to work with the assembled solution?</p>
+
+
+
+
+<p>Do we do it for the plugin ecosystem &mdash; full of code of varying quality and maintenance &mdash; even though many of the large application needs addressed by those plugins are addressed by other libraries as well, and sometimes better?</p>
+
+
+
+
+<p>And when we do it, when we assemble this collection of tools ourselves, what risks are we accepting? What price will we pay down the road to maintain three or five or 10 different pieces from three or five or 10 different authors, with different release cycles, no guarantee of compatibility or maintenance, and no central project thoughtfully considering their future?</p>
+
+
+
+
+<hr />
+
+
+
+
+<p>I&rsquo;ve wrestled with these questions for months, agonizing during sleepless early-morning hours over how to advise clients on the answers. I&rsquo;m the co-host of yayQuery, a contributor to the jQuery Cookbook, and, I&rsquo;ll venture to say, a decently respected member of the jQuery community. I did not arrive at this conclusion lightly, and I have few illusions it will be well-received, or even heeded.</p>
+
+
+
+
+<p>But I&rsquo;ve grown weary of people championing a tool that simply does not answer the big questions I see in project after intensively client-side project. I&rsquo;ve grown weary of those same people dismissing tools that answer those questions handily and have been answering them for a while now. I cringe when clients tell me they&rsquo;ve chosen jQuery because it was &ldquo;easy,&rdquo; and then watch them predictably struggle with all of the questions it does not answer. And I&rsquo;ve found I can&rsquo;t continue to bite my tongue when people recommend jQuery as an enterprise-grade solution while failing to acknowledge these questions, let alone answer them*.</p>
+
+
+
+
+<hr />
+
+
+
+
+<p>I do not want to see jQuery go away. The simplicity of its API was undeniably instrumental in the rise of JavaScript as a language these last few years. It is a perfect gateway drug, and I greatly enjoy watching people transition from &ldquo;get some elements, do something with them&rdquo; to the elegant patterns of JavaScript itself.</p>
+
+
+
+
+<p>jQuery is an entirely appropriate answer to so many questions, but it falls so short for large applications, forcing you to assemble such a tenuous toolkit of your own, that it simply isn&rsquo;t a viable answer &mdash; or, in my opinion, part of an answer &mdash; for large applications. If we hope to continue to gain respect as a community, we ought to admire jQuery&rsquo;s immense contributions, but we must not be afraid to accept and make very clear its limitations. We do otherwise at our peril.</p>
+
+
+
+
+<hr />
+
+
+
+
+<p><em>*An aside: To its credit, <a href="http://jupiterit.com">JupiterIT</a> has put forward <a href="http://javascriptmvc.com">JavaScriptMVC</a>, the only substantive attempt I&rsquo;ve seen at answering these large application questions using jQuery. I applaud them, but fear their efforts will continue to be somewhat isolated without the support and endorsement of the wider jQuery community. If you have read this far and still have your heart set on a jQuery-centric large application solution, you should by all means take a look at JavaScriptMVC.</em></p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/07/27/i-need-to-say-a-few-things/">I Need to Say a Few Things.</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-07-27T00:00:00-04:00" pubdate data-updated="true">Jul 27<span>th</span>, 2010</time>
+        
+         | <a href="/blog/2010/07/27/i-need-to-say-a-few-things/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Over the weekend, there was a tweet announcing that Google was going to provide &#8220;scholarships&#8221; to qualified women to attend JSConf.eu. There was then a tweet by another person calling this &#8220;disgusting&#8221; and &#8220;illegal.&#8221; Nicole Sullivan has a <a href="http://www.stubbornella.org/content/2010/07/26/woman-in-technology/">level-headed and well-articulated roundup</a> of the back-and-forth and some of the surrounding issues, and I suggest you read it.</p>
+
+
+
+
+<p>I take no position on the scholarships. I question whether they will have any meaningful or lasting effect. I fear the availability of the scholarships will lead to ill feelings about the women who do attend. Simultaneously, I yearn to discover, against hope, that they make it possible for some highly qualified but unknown woman to gain access to the JavaScript community.  Whatever. Smarter people than me have a better idea than I do as to how effective they will be, and lawyers can tell you whether they&#8217;re illegal. I&#8217;ll stand firmly in the &#8220;no&#8221; camp on the disgusting count.</p>
+
+
+
+
+<p>You know what&#8217;s disgusting? Being groped at a conference after-party by a drunk married man. Opening your hotel door to discover said drunk married man stumbling down the hall, asking himself into your room, and literally having to slam the door in his face. Having a video of you posted on the internet, suggesting that you were engaged in a sexual act with the yayQuery logo. Seeing someone ask, publicly, on Twitter, if anyone knows the name of the hot conference chick.  That, dear reader, is disgusting.</p>
+
+
+
+
+<p>I adore my male friends in the tech community. They have encouraged and supported me and welcomed me into their inner circles. But even they can act like 12-year-old boys sometimes, and while I don&#8217;t begrudge them that, it is hard, because it&#8217;s at those moments that I realize how much I am not them, how much I long to have more than the barest assembly of female peers who have any idea what this is like.  And then I remember: those peers I long for will have to put up with so much shit to be in that cool kid&#8217;s club, and you know what? If Google wants to pay them a measly few hundred bucks to put up with it, maybe that&#8217;s OK. Hell, maybe they ought to pay them more. Perhaps, as ham-handed and questionably productive as the scholarships may be, it&#8217;s only fair to pay women to look the other way when some asshole treats them like a thing instead of a person.</p>
+
+
+
+
+<p>I am angry. I have been angry since Saturday, when this all started. I have spent the last year trying to be the thing that I want to see: the woman on stage. I have formed groups to encourage other women to do the same. I have reached out to women who show potential and tried to give them the encouraging nudge they need that no one really gave me.   And right this very moment, I feel incredibly selfish. This weekend reminded me what I am asking those women to enter into: a world that presents no tangible barriers, but that will objectify them every step of the way. And if these women have the guts &#8211; well, let&#8217;s be community-appropriate here &#8211; if they have the balls to speak up and say that it is hard to be a woman in this field, that it takes a thick skin and determination and a willingness to be one of the boys even when that&#8217;s the last thing in the world they want to do, then they should brace for a chorus of men to rise and tell them they are wrong.</p>
+
+
+
+
+<p>Men, guys, boys: I am not asking you to give up Star Wars and The Matrix. I&#8217;m not even asking you to give up gratuitous phallic references and #twss jokes, though I hope we&#8217;re all grown-up enough to know that there&#8217;s a time and a place. And you know what? If you want to DM your friend about trying to hook up with that hot conference chick, well, good luck with that. We&#8217;re all human.   But for the love of all that is good: this being a woman in your world thing, it&#8217;s not easy, OK? Maybe you can&#8217;t understand it, and I even believe it when you say you don&#8217;t mean it. But when you deny it, you just look like an ass.</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/07/12/patterns-for-dry-er-javascript/">Patterns for DRY-er JavaScript</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-07-12T00:00:00-04:00" pubdate data-updated="true">Jul 12<span>th</span>, 2010</time>
+        
+         | <a href="/blog/2010/07/12/patterns-for-dry-er-javascript/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I came across a little code the other day that reminded me I&#8217;ve been meaning to write about JavaScript patterns I take for granted. The code in question was intended to set the value of some fields in a form when a checkbox was selected; when it was deselected, the same fields were to be emptied. It looked not unlike this:</p>
+
+
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="c1">// config is defined outside of this snippet,</span>
+</span><span class='line'><span class="c1">// and may contain more than the properties</span>
+</span><span class='line'><span class="c1">// we care about </span>
+</span><span class='line'><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#myCheckbox&#39;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">checked</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#field_foo&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">foo</span><span class="p">);</span>
+</span><span class='line'>    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#field_bar&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">bar</span><span class="p">);</span>
+</span><span class='line'>    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#field_baz&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">baz</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#field_foo&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">);</span>
+</span><span class='line'>    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#field_bar&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">);</span>
+</span><span class='line'>    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#field_baz&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<p>This is a wholly readable bit of code &#8211; there&#8217;s almost no question what&#8217;s going on here. On the other hand, it&#8217;s pretty easy to see the rampant repetition; this code isn&#8217;t interested in &#8220;don&#8217;t repeat yourself&#8221; (DRY). We&#8217;re calling the same method on every selection we make, and our selections are repeated in both the if and else block.   When I saw this code, I had an immediate inclination to rewrite it. Here&#8217;s what I came up with first:</p>
+
+
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="c1">// config is defined outside of this snippet,</span>
+</span><span class='line'><span class="c1">// and may contain more than the properties</span>
+</span><span class='line'><span class="c1">// we care about</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#myCheckbox&#39;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="c1">// note whether the checkbox is checked</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">checked</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">checked</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// iterate over the keys we care about</span>
+</span><span class='line'>  <span class="nx">$</span><span class="p">.</span><span class="nx">each</span><span class="p">([</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="s1">&#39;bar&#39;</span><span class="p">,</span> <span class="s1">&#39;baz&#39;</span><span class="p">],</span> <span class="kd">function</span><span class="p">(</span><span class="nx">i</span><span class="p">,</span><span class="nx">v</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="c1">// find the field for the given key</span>
+</span><span class='line'>    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#field_&#39;</span> <span class="o">+</span> <span class="nx">v</span><span class="p">)</span>
+</span><span class='line'>      <span class="c1">// and set its value either to the string</span>
+</span><span class='line'>      <span class="c1">// stored for the key, or to an empty string,</span>
+</span><span class='line'>      <span class="c1">// depending on whether the checkbox was checked</span>
+</span><span class='line'>      <span class="p">.</span><span class="nx">val</span><span class="p">(</span><span class="nx">checked</span> <span class="o">?</span> <span class="nx">config</span><span class="p">[</span><span class="nx">v</span><span class="p">]</span> <span class="o">:</span> <span class="s1">&#39;&#39;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<p>This looks approximately nothing like the initial code, and without the
+comments, the code itself would be substantially less readable than the
+original. The idealistic part of me &#8211; the part that believes people who write
+JavaScript should understand JavaScript &#8211; says this is an acceptable price to
+pay. And besides, there&#8217;s something to be said for explaining the code in a
+comment that can be stripped by a minifier, rather than explaining the code via
+the code.  In this iteration, we&#8217;ve introduced two patterns for DRY-er code:
+iterating over an array literal (or, alternately, an object) to achieve
+repetition without repeating ourselves, and using the ternary operator in place
+of an if/else statement when the simplicity of our logic allows it.  The array
+literal serves as a list of the fields we care about. When our checkbox is
+clicked, we iterate over this list, build up a selector for each item in the
+list, make our selection, and then set the field value using a <a
+href="http://stackoverflow.com/questions/1788917/javascript-ternary-operator">ternary
+operator</a>. We&#8217;ve gone from 11 lines of code to six, with the added bonus
+that we have to do a lot less typing if we need our checkbox to affect more
+fields.
+
+(A side note: Is this premature optimization? I&#8217;d argue no, if you&#8217;ve
+learn to see these patterns before you start writing code. Once you learn how
+to spot these patterns in a requirement, writing code that embraces them can
+actually be easier than writing code that takes a more &#8220;literal&#8221; approach to
+the problem. For example, imagine if the checkbox affected 20 other fields
+instead of one? You&#8217;d undoubtedly find yourself copying and pasting code if you
+took the more &#8220;literal&#8221; approach to the problem, and that would be your first
+clue that you were doing something inefficiently.)
+
+The great thing about using a pattern like this is that it rapidly exposes the
+actual meat of what you&#8217;re doing, and makes refactoring far less painful. I
+also find that it helps me see opportunities for reuse that I might not have
+spotted in the more literal version of the code.  Let&#8217;s say we&#8217;re feeling all
+proud of ourselves for DRYing out our code using clever JavaScript that only
+super-smart people can read. Now there&#8217;s another checkbox that needs similar
+behavior, but it&#8217;s going to use a different config object and a different list
+of fields. No problem! You&#8217;ve already written this code, so you can just copy
+and paste it and then change what&#8217;s different. Sweet. Er &#8230; suddenly you&#8217;re
+not looking so DRY after all.  This is when another pattern comes into play:
+creating a function that returns another function with certain variables
+already baked in (that is, creating a closure). We&#8217;ll execute this creator
+function and then use the function it returns in place of the anonymous
+function we were using previously when we bound to the click event.</p>
+
+
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="c1">// handleClick accepts a config object</span>
+</span><span class='line'><span class="c1">// and a makeSelector function; it returns</span>
+</span><span class='line'><span class="c1">// a function that can be bound to</span>
+</span><span class='line'><span class="c1">// a click event, using the config object</span>
+</span><span class='line'><span class="c1">// and the makeSelector function to react</span>
+</span><span class='line'><span class="c1">// appropriately to the click</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">handleClick</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">fields</span><span class="p">,</span> <span class="nx">config</span><span class="p">,</span> <span class="nx">makeSelector</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">checked</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">checked</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nx">fields</span> <span class="o">&amp;&amp;</span> <span class="nx">$</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="nx">fields</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">i</span><span class="p">,</span> <span class="nx">v</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="c1">// build the selector using the provided</span>
+</span><span class='line'>      <span class="c1">// makeSelector function</span>
+</span><span class='line'>      <span class="nx">$</span><span class="p">(</span><span class="nx">makeSelector</span><span class="p">(</span><span class="nx">v</span><span class="p">))</span>
+</span><span class='line'>              <span class="c1">// set the value using the</span>
+</span><span class='line'>              <span class="c1">// config object, depending</span>
+</span><span class='line'>              <span class="c1">// on whether the checkbox</span>
+</span><span class='line'>              <span class="c1">// is checked</span>
+</span><span class='line'>              <span class="p">.</span><span class="nx">val</span><span class="p">(</span><span class="nx">checked</span> <span class="o">?</span> <span class="nx">config</span><span class="p">[</span><span class="nx">v</span><span class="p">]</span><span class="o">:</span> <span class="s1">&#39;&#39;</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">});</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#myCheckbox&#39;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span>
+</span><span class='line'>  <span class="c1">// use handleClick to create a function</span>
+</span><span class='line'>  <span class="c1">// that has these variables baked in;</span>
+</span><span class='line'>  <span class="c1">// pass the created function as the</span>
+</span><span class='line'>  <span class="c1">// click handling function</span>
+</span><span class='line'>  <span class="nx">handleClick</span><span class="p">(</span>
+</span><span class='line'>    <span class="p">[</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span><span class="s1">&#39;bar&#39;</span><span class="p">,</span><span class="s1">&#39;baz&#39;</span><span class="p">],</span>
+</span><span class='line'>    <span class="nx">myCheckboxConfig</span><span class="p">,</span>
+</span><span class='line'>    <span class="kd">function</span><span class="p">(</span><span class="nx">field</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="s1">&#39;#field_&#39;</span> <span class="o">+</span> <span class="nx">field</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'>  <span class="p">)</span>
+</span><span class='line'><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#myOtherCheckbox&#39;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span>
+</span><span class='line'>  <span class="nx">handleClick</span><span class="p">(</span>
+</span><span class='line'>    <span class="p">[</span><span class="s1">&#39;bim&#39;</span><span class="p">,</span><span class="s1">&#39;bar&#39;</span><span class="p">,</span><span class="s1">&#39;bop&#39;</span><span class="p">],</span>
+</span><span class='line'>    <span class="nx">myOtherCheckboxConfig</span><span class="p">,</span>
+</span><span class='line'>    <span class="kd">function</span><span class="p">(</span><span class="nx">field</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="s1">&#39;input[name=&amp;quot;&#39;</span> <span class="o">+</span> <span class="nx">field</span> <span class="o">+</span> <span class="s1">&#39;&amp;quot;]&#39;</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'>  <span class="p">)</span>
+</span><span class='line'><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<p>By creating a function that returns a function, we can isolate what&#8217;s different about the two different handlers while centralizing the pieces that are the same. If your event handling function was slightly less trivial than this one, or if you were binding to five different checkboxes instead of two, the benefit of consolidating the code would be even more substantial.  JavaScript offers plenty of patterns for writing DRY-er code; it&#8217;s important to learn to both recognize and use them. It&#8217;s also important to recognize when you&#8217;re writing un-DRY code in the first place &#8211; copying and pasting code is one crystal-clear indicator, but others are more subtle and you may not identify them on the first go-round. For example, take these two functions; each receives a list item as its only argument and returns either the next or previous list item, returning to the beginning or end of the list if there is no next or previous item.</p>
+
+
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">getNextItem</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$item</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nx">$item</span><span class="p">.</span><span class="nx">next</span><span class="p">().</span><span class="nx">length</span> <span class="o">?</span>
+</span><span class='line'>         <span class="nx">$item</span><span class="p">.</span><span class="nx">next</span><span class="p">()</span> <span class="o">:</span> <span class="nx">$items</span><span class="p">.</span><span class="nx">first</span><span class="p">();</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">var</span> <span class="nx">getPrevItem</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$item</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nx">$item</span><span class="p">.</span><span class="nx">prev</span><span class="p">().</span><span class="nx">length</span> <span class="o">?</span>
+</span><span class='line'>                <span class="nx">$item</span><span class="p">.</span><span class="nx">prev</span><span class="p">()</span> <span class="o">:</span> <span class="nx">$items</span><span class="p">.</span><span class="nx">last</span><span class="p">();</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<p>This felt repetitive when I first wrote it, but I couldn&#8217;t quickly come up with a single function that would work. A little thinking about it, though, led me to this single function which gets a second argument: direction. That argument is used to decide whether to run the item&#8217;s next or previous method, and then whether to run the item&#8217;s first or last method. Besides combining two functions into one, it also eliminates calling next or prev twice inside each function.</p>
+
+
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">getItem</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$item</span><span class="p">,</span> <span class="nx">direction</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">$returnItem</span> <span class="o">=</span> <span class="nx">$item</span><span class="p">[</span><span class="nx">direction</span><span class="p">]();</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nx">$returnItem</span><span class="p">.</span><span class="nx">length</span> <span class="o">?</span>
+</span><span class='line'>         <span class="nx">$returnItem</span> <span class="o">:</span>
+</span><span class='line'>         <span class="nx">$items</span><span class="p">[(</span><span class="nx">direction</span> <span class="o">==</span> <span class="s1">&#39;next&#39;</span><span class="p">)</span> <span class="o">?</span> <span class="s1">&#39;first&#39;</span> <span class="o">:</span> <span class="s1">&#39;last&#39;</span><span class="p">]();</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<p>Learning about patterns and then discovering opportunities to use them is one of the more pleasing parts of my job. I hope this helps you identify some of those opportunities for yourself :)</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/06/17/announcing-jquery-fundamentals-an-open-source-jquery-training-curriculum/">Announcing jQuery Fundamentals: An Open-Source jQuery Training Curriculum</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-17T00:00:00-04:00" pubdate data-updated="true">Jun 17<span>th</span>, 2010</time>
+        
+         | <a href="/blog/2010/06/17/announcing-jquery-fundamentals-an-open-source-jquery-training-curriculum/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&#8217;ve been leading <a href="http://www.rebeccamurphey.com/training">jQuery trainings</a> for more than a year now, from tiny gatherings that I organized myself at the local coworking space, to intensive two-day sessions at local web companies, to whirlwind one-day classes at governmental agencies. Over the course of those trainings, I&#8217;ve developed what I&#8217;d like to think is a decent curriculum &#8211; training material that&#8217;s the size of a small book, exercises that demonstrate core concepts, and solutions to those exercises that students can peek at later or when they get stuck.</p>
+
+<p>I decided recently that it was time for all of this material to see the light of day, so I spent the last several days converting it all to DocBook files that allow for easy publication to HTML and PDF (and other formats, if I&#8217;m later so inclined). I also fleshed out some topics that I&#8217;d given short shrift, and started planning sections covering advanced topics such as plugin authoring, code organization, best practices, and more. There&#8217;s more to come in the next few days, but I think what I&#8217;ve done so far is worth sharing. I hope you&#8217;ll agree.</p>
+
+<ul>
+<li><a href="http://rebeccamurphey.com/jqfundamentals/">Full HTML version of jQuery Fundamentals book</a></li>
+<li><a href="http://rebeccamurphey.com/jqfundamentals/book/release/html/index.html">&#8220;Chunked&#8221; HTML version of jQuery Fundamentals book</a></li>
+<li>
+<a href="http://github.com/rmurphey/jqfundamentals/">GitHub repo</a> (exercises, solutions, and book source code)</li>
+</ul>
+
+
+
+
+<br />
+
+
+<p style="margin: 20px 0;"><div class='p_embed p_image_embed'>
+<a href="http://getfile9.posterous.com/getfile/files.posterous.com/import-vejw/bxqpHqGhgCJJadEpIijidbehCvswlGiiGvHwyiJGejyjvxwnEDdopGoHuswe/media_httpgyazocoma21_qFIfz.png.scaled1000.png"><img alt="Media_httpgyazocoma21_qfifz" height="507" src="http://getfile2.posterous.com/getfile/files.posterous.com/import-vejw/bxqpHqGhgCJJadEpIijidbehCvswlGiiGvHwyiJGejyjvxwnEDdopGoHuswe/media_httpgyazocoma21_qFIfz.png.scaled500.png" width="500" /></a>
+</div>
+</p>
+
+
+<br />
+
+
+<p>My goals in releasing this are several. First and foremost, I want to see people writing better jQuery. The free resources for learning jQuery are scattered across the internets, and my personal experience of learning the library was haphazard — it was a long time before I learned some things I wish I&#8217;d known from the get-go. In addition, I want people who are writing jQuery to understand JavaScript. To that end, the book begins with a survey of JavaScript itself before jumping into jQuery.  Finally, I want to enlist the bright minds of the jQuery community to help developing a robust, authoritative, in-depth jQuery curriculum, and in exchange it only seemed fair to make it available to everyone.</p>
+
+<p>I should mention that the goal of this material is to serve as a companion to a human instructor. That said, individuals may find it useful for self-study, especially if they&#8217;re diligent about doing the exercises at the end of each chapter.</p>
+
+<p>If you&#8217;re inclined to help &#8211; by adding a chapter, a section, a paragraph, an exercise, or even just a correction &#8211; fork the repo and send me a pull request. I look forward to seeing how this project might evolve with the community&#8217;s help.</p>
+
+<p><strong>Note</strong>: If you comment on this post pointing out an issue with the material, I will do my best to tend to the issue, but I probably won&#8217;t publish your comment, as this post isn&#8217;t the right place for reporting issues in the code. You can <a href="http://github.com/rmurphey/jqfundamentals/issues">report issues at the repository</a>, but if it&#8217;s important to you, <em>please</em> fork the repository, make the change, and send me a pull request.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/5/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/3/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/01/18/onward/">Onward</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/12/10/js-conditionals/">Two Things about Conditionals in JavaScript</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/12/09/this-is-the-cigarette/">This is the Cigarette</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/29/choosing-presentation-color-scheme/">On Choosing a Syntax Highlighting Scheme for Your Next Presentation</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/25/times-open-science-fair/">Show & Tell</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/rmurphey">@rmurphey</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'rmurphey',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("rmurphey", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/rmurphey" class="twitter-follow-button" data-show-count="false">Follow @rmurphey</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Rebecca Murphey -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'rmurphey';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

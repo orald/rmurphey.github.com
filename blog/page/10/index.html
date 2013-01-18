@@ -1,0 +1,395 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Adventures in JavaScript Development</title>
+  <meta name="author" content="Rebecca Murphey">
+
+  
+  <meta name="description" content="I love trac, and I&#8217;ve been doing lots of work lately to customize it so our clients can use it to send us requests. With the configurable &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://rmurphey.github.com/blog/page/10/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Adventures in JavaScript Development" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-143877-10']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Adventures in JavaScript Development</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:rmurphey.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/12/03/remixing-trac-with-jquery/">Remixing Trac With jQuery</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-12-03T00:00:00-05:00" pubdate data-updated="true">Dec 3<span>rd</span>, 2007</time>
+        
+         | <a href="/blog/2007/12/03/remixing-trac-with-jquery/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I love <a href="http://trac.edgewall.org/">trac</a>, and I&#8217;ve been doing lots of work lately to customize it so our clients can use it to send us requests. With the configurable workflow option offered in <a href="http://trac.edgewall.org/milestone/0.11">version 0.11</a>, it became the perfect way for us to manage and track client requests. By connecting it to the subversion repository we use for version control of client files, we&#8217;ve virtually eliminated the need for back-and-forth emails &#8211; everything is in one place.</p>
+
+<p>Since trac is intended more for managing a development project than for managing an ongoing client relationship, I&#8217;ve had to make some changes to the out-of-the-box version. I don&#8217;t know Python, and I was having a hard time getting a developer to dive in at the level I needed on a non-billable project. Lucky for me, version 0.11 also includes jQuery (version 1.1.3.1). After a couple of chats with a developer and a few &#8220;duh&#8221; moments, it became clear that I could do most of what I needed without messing around under the hood.</p>
+
+<p>The story so far:</p>
+
+<ul>
+<li>Our clients use trac for internal approval of a request before it gets sent to us &#8211; a content provider can enter a request, which then gets reviewed by a manager. We needed a way to assign this manager to the ticket, without the manager becoming the &#8220;owner&#8221; of the ticket. Initially, we had content providers entering their manager&#8217;s email address into the Cc: field, but that didn&#8217;t go over well. Now, jQuery reuses the existing Assign to menu to build a manager dropdown, with the usernames of our employees removed. When the ticket is submitted, the manager is added to the Cc: field automatically.
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="c1">// build the new dropdown</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">custom_cc_select</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+</span><span class='line'><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#custom-form&#39;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="nx">custom_cc_select</span><span class="p">);</span>
+</span><span class='line'><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#field-owner option&#39;</span><span class="p">).</span><span class="nx">each</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">name</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">html</span><span class="p">();</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="nx">$</span><span class="p">.</span><span class="nx">inArray</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span><span class="nx">excludedManagers</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#custom-cc&#39;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="s1">&#39;&#39;</span> <span class="o">+</span> <span class="nx">name</span> <span class="o">+</span> <span class="s1">&#39;&#39;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// add the selected manager to the cc field on ticket submit</span>
+</span><span class='line'><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;div.ticket form&#39;</span><span class="p">).</span><span class="nx">submit</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">oldCc</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#field-cc&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">();</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">manager</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#custom-cc option:selected&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">();</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="nx">oldCc</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="p">{</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#field-cc&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="nx">oldCC</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span> <span class="o">+</span> <span class="nx">manager</span><span class="p">);</span> <span class="p">}</span>
+</span><span class='line'>  <span class="k">else</span> <span class="p">{</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#field-cc&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="nx">manager</span><span class="p">);</span> <span class="p">}</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+</li>
+
+<li>The standard trac ticket fields were exactly what we needed, but the labels for them were a little confusing to client users. Plus, the form was ugly. A few lines of jQuery created a new section in the form, moved the fields to that section without their table-based layout, reordered the fields and and relabeled them. For example:
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#field-component&#39;</span><span class="p">).</span> <span class="c1">// get the component dropdown</span>
+</span><span class='line'><span class="nx">remove</span><span class="p">().</span> <span class="c1">// remove it from the DOM but maintain access to it</span>
+</span><span class='line'><span class="nx">appendTo</span><span class="p">(</span><span class="s1">&#39;#custom-form&#39;</span><span class="p">).</span> <span class="c1">// put it at the end of the #custom-form div</span>
+</span><span class='line'><span class="nx">before</span><span class="p">(</span><span class="s1">&#39;Request Type&#39;</span><span class="p">);</span> <span class="c1">// put a new label before it</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+The new form makes more sense to the client users, reduces errors and omissions, and looks better too.</li>
+
+<li>For certain client requests, a more complex form is required. Trac offers custom fields, but that solution seemed too limiting. With a few more lines of jQuery, I set up a system that watches the Component dropdown. When certain components are chosen, the standard submission form is hidden, and a new form is put in its place using jQuery&#8217;s load() method. The replacement content can include HTML, standard form elements and javascript; when the form is submitted, javascript assembles the field values into a well-formatted description.</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/12/03/my-case-for-standards-based-web-layouts/">My Case for Standards-based Web Layouts</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-12-03T00:00:00-05:00" pubdate data-updated="true">Dec 3<span>rd</span>, 2007</time>
+        
+         | <a href="/blog/2007/12/03/my-case-for-standards-based-web-layouts/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Since 1999, the World Wide Web Consortium (W3C) &#8211; a standards body that tells the world how the web should work &#8211; has urged web sites to use semantic markup for content and cascading stylesheets (CSS) for layout, and to abandon code that combines information and presentation in non-semantic HTML table-based layouts. Semantic markup &#8230;</p>
+
+<ul>
+<li>puts the most important information in a document at the beginning of the document;</li>
+<li>clearly marks headings, paragraphs, lists and other standard elements; and </li>
+<li>in general indicates what something is, not what it looks like.</li>
+</ul>
+
+
+<p>It’s this separation of information from presentation that helps Google figure out what a page is about; that lets users make decisions about how they interact with content; that allows content to be reused in ways we didn’t think about when it was first created; that lets us change the look and feel of a whole site by editing a file or two; and that lets us take a site built for a PC-based browser and squeeze it onto an iPhone.</p>
+
+<p>All those advantages aside, at the end of the day, just because the W3C says it should be so doesn’t make it so. Plenty of sites haven’t managed to let go of late-1900s practices, and for understandable reasons: There’s a non-trivial learning curve for designers and developers who grew up slicing and dicing layouts into HTML tables, and good semantic markup and CSS takes careful planning at the outset of a project. Combine those challenges with the fact that a dynamic site’s front-end code can be brutally intertwined with back-end processes, and it can be difficult for a company to justify transitioning away from a system that seems to be working just fine.</p>
+
+<p>However, a few factors are tipping the balance in the W3C’s favor these days:</p>
+
+<ul>
+<li>
+<strong>Search engines like pages they can read</strong>, and semantic markup using HTML provides a language search engines can understand. Mark an element as a Level 1 Heading, and search engines will know it’s the most important heading on the page and use that information to figure out what your page is about. Simply using semantic markup can contribute greatly to a site’s search engine optimization.</li>
+<li>
+<strong>Accessibility has come to the forefront of the web development world</strong> with the certification of <a href="http://www.456bereastreet.com/archive/200710/update_on_the_target_accessibility_lawsuit/">a class-action lawsuit against Target</a> department stores. The suit says that Target has refused to take steps to make the site usable by people who are visually impaired. As a result of a ruling in the lawsuit, <a href="http://www.techcrunch.com/2007/10/13/websites-may-require-visually-impaired-access-in-california/">California may mandate that sites be accessible to the visually impaired</a>. While sites that use table-based layouts aren’t inaccessible by definition, they are inherently more difficult to make accessible than sites that separate their information from their presentation.</li>
+<li>
+<strong>The Web 2.0 phenomenon relies on content that can be rearranged and reused with ease</strong>, and that rearranging and reuse is infinitely easier on sites that separate information from presentation. Web 2.0 technologies rearrange, reuse and repopulate elements on a page based on what the elements are, not on what they look like or where they are on the page. As users come to expect more interactivity and fewer page loads from their web experience, sites that separate their information from presentation will be in a better position to make use of Web 2.0 technologies.</li>
+<li>The mobile web has existed for several years now, but <strong><a href="http://www.alistapart.com/articles/putyourcontentinmypocket">the iPhone is reshaping the mobile web landscape</a></strong> and blurring the line between PCs and portable devices. Though the iPhone can browse “normal” web sites, many content providers are offering sites that are HTML-based but customized for the shape and size of the iPhone’s screen. As more portable devices that can browse the “normal” web become available, sites that separate content from presentation will be uniquely positioned to offer mobile users a customized version of their existing pages without having to change the underlying code.</li>
+</ul>
+
+
+<p>Further reading:</p>
+
+<ul>
+<li>
+<a href="http://www.456bereastreet.com/archive/200711/posh_plain_old_semantic_html/">POSH - Plain Old Semantic HTML</a> on 456 Berea Street</li>
+<li>
+<a href="http://www.hotdesign.com/seybold/everything.html">Why Tables for Layout is Stupid</a> from Seybold 2003 (!)</li>
+<li><a href="http://www.w3.org/Style/CSS/">The W3C on CSS</a></li>
+<li>
+<a href="http://csszengarden.com/">CSS Zen Garden</a>, the site that leads many developers down the path to standards</li>
+<li>
+<a href="http://www.alistapart.com">A List Apart</a> offers excellent articles on standards-based web development</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/9/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/01/18/onward/">Onward</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/12/10/js-conditionals/">Two Things about Conditionals in JavaScript</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/12/09/this-is-the-cigarette/">This is the Cigarette</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/29/choosing-presentation-color-scheme/">On Choosing a Syntax Highlighting Scheme for Your Next Presentation</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/25/times-open-science-fair/">Show & Tell</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/rmurphey">@rmurphey</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'rmurphey',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("rmurphey", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/rmurphey" class="twitter-follow-button" data-show-count="false">Follow @rmurphey</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Rebecca Murphey -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'rmurphey';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
